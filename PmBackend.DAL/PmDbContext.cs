@@ -8,9 +8,9 @@ using System.Text;
 
 namespace PmBackend.DAL
 {
-    public class PmDbContext : IdentityDbContext<User/*,
+    public class PmDbContext : IdentityDbContext<User,
         IdentityRole<int>, 
-        int,
+        int/*,
         IdentityUserClaim<int>,
         IdentityUserRole<int>,
         IdentityUserLogin<int>, 
@@ -68,8 +68,8 @@ namespace PmBackend.DAL
                 );
             modelBuilder.Entity<User>()
                 .HasData(
-                    new User { Id = "1", UserName = "Teszt Elek", Email = "elek@teszt.com"},
-                    new User { Id = "2", UserName = "Példa Béla", Email = "bela@pelda.com" }
+                    new User { Id = 1, UserName = "Teszt Elek", Email = "elek@teszt.com"},
+                    new User { Id = 2, UserName = "Példa Béla", Email = "bela@pelda.com" }
                 );
 
         }

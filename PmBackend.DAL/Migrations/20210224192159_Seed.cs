@@ -11,7 +11,8 @@ namespace PmBackend.DAL.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -25,7 +26,8 @@ namespace PmBackend.DAL.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -65,7 +67,7 @@ namespace PmBackend.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -86,7 +88,7 @@ namespace PmBackend.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -108,7 +110,7 @@ namespace PmBackend.DAL.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,8 +127,8 @@ namespace PmBackend.DAL.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -149,7 +151,7 @@ namespace PmBackend.DAL.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -195,22 +197,21 @@ namespace PmBackend.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 2, 24, 18, 28, 21, 367, DateTimeKind.Local).AddTicks(4423)),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 2, 24, 20, 21, 57, 180, DateTimeKind.Local).AddTicks(4395)),
                     Hours = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IssueId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TimeEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TimeEntries_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_TimeEntries_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TimeEntries_Issues_IssueId",
                         column: x => x.IssueId,
@@ -222,12 +223,12 @@ namespace PmBackend.DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "1", 0, "5e5dcf67-00c4-4972-8a40-e175c5e1243b", "elek@teszt.com", false, false, null, null, null, null, null, false, "312bdb3c-7b3a-453b-b297-4e1db7313a05", false, "Teszt Elek" });
+                values: new object[] { 1, 0, "b8b1f7f1-5bc2-4710-8cec-83c120eb62fc", "elek@teszt.com", false, false, null, null, null, null, null, false, null, false, "Teszt Elek" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "2", 0, "df1c4014-6805-4a52-86d8-8908d21bee87", "bela@pelda.com", false, false, null, null, null, null, null, false, "77e34e22-b8c8-4654-96c9-63d03c012609", false, "Példa Béla" });
+                values: new object[] { 2, 0, "9013edc1-ea3a-4232-826a-43c7b5a6b261", "bela@pelda.com", false, false, null, null, null, null, null, false, null, false, "Példa Béla" });
 
             migrationBuilder.InsertData(
                 table: "Projects",
@@ -246,18 +247,18 @@ namespace PmBackend.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "TimeEntries",
-                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId", "UserId1" },
-                values: new object[] { 1, new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(2183), null, 2, 1, 1, null });
+                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId" },
+                values: new object[] { 1, new DateTime(2021, 2, 24, 20, 21, 57, 213, DateTimeKind.Local).AddTicks(7845), null, 2, 1, 1 });
 
             migrationBuilder.InsertData(
                 table: "TimeEntries",
-                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId", "UserId1" },
-                values: new object[] { 2, new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(7548), null, 5, 1, 1, null });
+                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId" },
+                values: new object[] { 2, new DateTime(2021, 2, 24, 20, 21, 57, 214, DateTimeKind.Local).AddTicks(4992), null, 5, 1, 1 });
 
             migrationBuilder.InsertData(
                 table: "TimeEntries",
-                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId", "UserId1" },
-                values: new object[] { 3, new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(7696), null, 10, 2, 2, null });
+                columns: new[] { "Id", "Date", "Description", "Hours", "IssueId", "UserId" },
+                values: new object[] { 3, new DateTime(2021, 2, 24, 20, 21, 57, 214, DateTimeKind.Local).AddTicks(5256), null, 10, 2, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -309,9 +310,9 @@ namespace PmBackend.DAL.Migrations
                 column: "IssueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimeEntries_UserId1",
+                name: "IX_TimeEntries_UserId",
                 table: "TimeEntries",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

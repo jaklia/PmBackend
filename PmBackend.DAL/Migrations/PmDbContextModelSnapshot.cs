@@ -19,10 +19,12 @@ namespace PmBackend.DAL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -46,7 +48,7 @@ namespace PmBackend.DAL.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,9 +61,8 @@ namespace PmBackend.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -70,7 +71,7 @@ namespace PmBackend.DAL.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,9 +84,8 @@ namespace PmBackend.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -94,7 +94,7 @@ namespace PmBackend.DAL.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -105,9 +105,8 @@ namespace PmBackend.DAL.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -116,13 +115,13 @@ namespace PmBackend.DAL.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -131,10 +130,10 @@ namespace PmBackend.DAL.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -236,7 +235,7 @@ namespace PmBackend.DAL.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 2, 24, 18, 28, 21, 367, DateTimeKind.Local).AddTicks(4423));
+                        .HasDefaultValue(new DateTime(2021, 2, 24, 20, 21, 57, 180, DateTimeKind.Local).AddTicks(4395));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -250,14 +249,11 @@ namespace PmBackend.DAL.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IssueId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TimeEntries");
 
@@ -265,7 +261,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(2183),
+                            Date = new DateTime(2021, 2, 24, 20, 21, 57, 213, DateTimeKind.Local).AddTicks(7845),
                             Hours = 2,
                             IssueId = 1,
                             UserId = 1
@@ -273,7 +269,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(7548),
+                            Date = new DateTime(2021, 2, 24, 20, 21, 57, 214, DateTimeKind.Local).AddTicks(4992),
                             Hours = 5,
                             IssueId = 1,
                             UserId = 1
@@ -281,7 +277,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2021, 2, 24, 18, 28, 21, 394, DateTimeKind.Local).AddTicks(7696),
+                            Date = new DateTime(2021, 2, 24, 20, 21, 57, 214, DateTimeKind.Local).AddTicks(5256),
                             Hours = 10,
                             IssueId = 2,
                             UserId = 2
@@ -290,8 +286,10 @@ namespace PmBackend.DAL.Migrations
 
             modelBuilder.Entity("PmBackend.DAL.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -355,42 +353,40 @@ namespace PmBackend.DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5e5dcf67-00c4-4972-8a40-e175c5e1243b",
+                            ConcurrencyStamp = "b8b1f7f1-5bc2-4710-8cec-83c120eb62fc",
                             Email = "elek@teszt.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "312bdb3c-7b3a-453b-b297-4e1db7313a05",
                             TwoFactorEnabled = false,
                             UserName = "Teszt Elek"
                         },
                         new
                         {
-                            Id = "2",
+                            Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "df1c4014-6805-4a52-86d8-8908d21bee87",
+                            ConcurrencyStamp = "9013edc1-ea3a-4232-826a-43c7b5a6b261",
                             Email = "bela@pelda.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "77e34e22-b8c8-4654-96c9-63d03c012609",
                             TwoFactorEnabled = false,
                             UserName = "Példa Béla"
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("PmBackend.DAL.Entities.User", null)
                         .WithMany()
@@ -399,7 +395,7 @@ namespace PmBackend.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("PmBackend.DAL.Entities.User", null)
                         .WithMany()
@@ -408,9 +404,9 @@ namespace PmBackend.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -423,7 +419,7 @@ namespace PmBackend.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("PmBackend.DAL.Entities.User", null)
                         .WithMany()
@@ -453,7 +449,9 @@ namespace PmBackend.DAL.Migrations
 
                     b.HasOne("PmBackend.DAL.Entities.User", "User")
                         .WithMany("TimeEntries")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Issue");
 

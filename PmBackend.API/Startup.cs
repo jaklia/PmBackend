@@ -34,9 +34,9 @@ namespace PmBackend.API
             services.AddControllers();
             services.AddDbContext<PmDbContext>(options => 
                     options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-            services.AddIdentity<User, IdentityRole>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
-                 
-                .AddEntityFrameworkStores<PmDbContext>();
+            services.AddIdentity<User, IdentityRole<int>>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+                .AddEntityFrameworkStores<PmDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<ITimeEntryService, TimeEntryService>();
             services.AddTransient<IProjectService, ProjectService>();
