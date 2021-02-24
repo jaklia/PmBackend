@@ -12,20 +12,20 @@ namespace PmBackend.BLL.Services
 {
     public class TimeEntryService : ITimeEntryService
     {
-        private readonly PmDbContext ctx;
+        private readonly PmDbContext _ctx;
         public TimeEntryService(PmDbContext ctx) {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
 
         public void DeleteTimeEntry(int timeEntryId)
         {
-            ctx.TimeEntries.Remove(new TimeEntry { Id = timeEntryId });
-            ctx.SaveChanges();
+            _ctx.TimeEntries.Remove(new TimeEntry { Id = timeEntryId });
+            _ctx.SaveChanges();
         }
 
         public IEnumerable<TimeEntry> GetTimeEntries()
         {
-            var timeEntries = ctx.TimeEntries
+            var timeEntries = _ctx.TimeEntries
                 //.Include(t => t.Issue)
                 //.Include(t=> t.User)
                 .ToList();
@@ -39,24 +39,24 @@ namespace PmBackend.BLL.Services
 
         public TimeEntry GetTimeEntry(int timeEntryId)
         {
-            return ctx.TimeEntries
+            return _ctx.TimeEntries
                 //.Include(t => t.Issue)
                 .SingleOrDefault(t => t.Id == timeEntryId);
         }
 
         public TimeEntry InsertTimeEntry(TimeEntry newTimeEntry)
         {
-            ctx.TimeEntries.Add(newTimeEntry);
-            ctx.SaveChanges();
+            _ctx.TimeEntries.Add(newTimeEntry);
+            _ctx.SaveChanges();
             return newTimeEntry;
         }
 
         public void UpdateTimeEntry(int timeEntryId, TimeEntry updatedTimeEntry)
         {
             updatedTimeEntry.Id = timeEntryId;
-            var t = ctx.Attach(updatedTimeEntry);
+            var t = _ctx.Attach(updatedTimeEntry);
             t.State = EntityState.Modified;
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
     }
 }

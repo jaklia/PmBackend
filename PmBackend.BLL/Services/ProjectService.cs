@@ -11,28 +11,28 @@ namespace PmBackend.BLL.Services
 {
     public class ProjectService : IProjectService
     {
-        private readonly PmDbContext ctx;
+        private readonly PmDbContext _ctx;
         public ProjectService(PmDbContext ctx)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
 
         public void DeleteProject(int projectId)
         {
-            ctx.Projects.Remove(new Project { Id = projectId });
-            ctx.SaveChanges();
+            _ctx.Projects.Remove(new Project { Id = projectId });
+            _ctx.SaveChanges();
         }
 
         public Project GetProject(int projectId)
         {
-            return ctx.Projects
+            return _ctx.Projects
                 .Include(p=> p.Issues)
                 .SingleOrDefault(p => p.Id == projectId);
         }
 
         public IEnumerable<Project> GetProjects()
         {
-            return ctx.Projects.ToList();
+            return _ctx.Projects.ToList();
         }
 
         public IEnumerable<Project> GetProjectsForUser(int userId)
@@ -42,17 +42,17 @@ namespace PmBackend.BLL.Services
 
         public Project InsertProject(Project newProject)
         {
-            ctx.Projects.Add(newProject);
-            ctx.SaveChanges();
+            _ctx.Projects.Add(newProject);
+            _ctx.SaveChanges();
             return newProject;
         }
 
         public void UpdateProject(int projectId, Project updatedProject)
         {
             updatedProject.Id = projectId;
-            var p = ctx.Attach(updatedProject);
+            var p = _ctx.Attach(updatedProject);
             p.State = EntityState.Modified;
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
     }
 }

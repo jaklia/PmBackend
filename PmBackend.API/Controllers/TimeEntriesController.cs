@@ -13,31 +13,31 @@ namespace PmBackend.API.Controllers
     [ApiController]
     public class TimeEntriesController : ControllerBase
     {
-        private readonly ITimeEntryService timeEntryService;
+        private readonly ITimeEntryService _timeEntryService;
         public TimeEntriesController(ITimeEntryService timeEntryService)
         {
-            this.timeEntryService = timeEntryService;
+            _timeEntryService = timeEntryService;
         }
 
         // GET: api/TimeEntries
         [HttpGet]
         public IEnumerable<TimeEntry> Get()
         {
-            return timeEntryService.GetTimeEntries();
+            return _timeEntryService.GetTimeEntries();
         }
 
         // GET: api/TimeEntries/5
         [HttpGet("{id}", Name = "GetTimeEntry")]
         public TimeEntry Get(int id)
         {
-            return timeEntryService.GetTimeEntry(id);
+            return _timeEntryService.GetTimeEntry(id);
         }
 
         // POST: api/TimeEntries
         [HttpPost]
         public TimeEntry Post([FromBody] TimeEntry value)
         {
-            var created = timeEntryService.InsertTimeEntry(value);
+            var created = _timeEntryService.InsertTimeEntry(value);
             return created;
         }
 
@@ -45,14 +45,14 @@ namespace PmBackend.API.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] TimeEntry value)
         {
-            timeEntryService.UpdateTimeEntry(id, value);
+            _timeEntryService.UpdateTimeEntry(id, value);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            timeEntryService.DeleteTimeEntry(id);
+            _timeEntryService.DeleteTimeEntry(id);
         }
     }
 }

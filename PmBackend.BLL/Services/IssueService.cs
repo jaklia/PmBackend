@@ -11,28 +11,28 @@ namespace PmBackend.BLL.Services
 {
     public class IssueService : IIssueService
     {
-        private readonly PmDbContext ctx;
+        private readonly PmDbContext _ctx;
         public IssueService(PmDbContext ctx)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
 
         public void DeleteIssue(int issueId)
         {
-            ctx.Issues.Remove(new Issue { Id = issueId });
-            ctx.SaveChanges();
+            _ctx.Issues.Remove(new Issue { Id = issueId });
+            _ctx.SaveChanges();
         }
 
         public Issue GetIssue(int issueId)
         {
-            return ctx.Issues
+            return _ctx.Issues
               //  .Include(i => i.Project)
                 .SingleOrDefault(i => i.Id == issueId);
         }
 
         public IEnumerable<Issue> GetIssues()
         {
-            return ctx.Issues.ToList();
+            return _ctx.Issues.ToList();
         }
 
         public IEnumerable<Issue> GetIssuesForProject(int projectId)
@@ -42,17 +42,17 @@ namespace PmBackend.BLL.Services
 
         public Issue InsertIssue(Issue newIssue)
         {
-            ctx.Issues.Add(newIssue);
-            ctx.SaveChanges();
+            _ctx.Issues.Add(newIssue);
+            _ctx.SaveChanges();
             return newIssue;
         }
 
         public void UpdateIssue(int issueId, Issue updatedIssue)
         {
             updatedIssue.Id = issueId;
-            var i = ctx.Attach(updatedIssue);
+            var i = _ctx.Attach(updatedIssue);
             i.State = EntityState.Modified;
-            ctx.SaveChanges();
+            _ctx.SaveChanges();
         }
     }
 }

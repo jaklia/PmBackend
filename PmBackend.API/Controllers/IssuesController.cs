@@ -9,31 +9,31 @@ namespace PmBackend.API.Controllers
     [ApiController]
     public class IssuesController : ControllerBase
     {
-        private readonly IIssueService issueService;
+        private readonly IIssueService _issueService;
         public IssuesController(IIssueService issueService)
         {
-            this.issueService = issueService;
+            _issueService = issueService;
         }
 
         // GET: api/Issues
         [HttpGet]
         public IEnumerable<Issue> Get()
         {
-            return issueService.GetIssues();
+            return _issueService.GetIssues();
         }
 
         // GET: api/Issues/5
         [HttpGet("{id}", Name = "GetIssue")]
         public Issue Get(int id)
         {
-            return issueService.GetIssue(id);
+            return _issueService.GetIssue(id);
         }
 
         // POST: api/Issues
         [HttpPost]
         public Issue Post([FromBody] Issue value)
         {
-            var created = issueService.InsertIssue(value);
+            var created = _issueService.InsertIssue(value);
             return created;
         }
 
@@ -41,14 +41,14 @@ namespace PmBackend.API.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Issue value)
         {
-            issueService.UpdateIssue(id, value);
+            _issueService.UpdateIssue(id, value);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            issueService.DeleteIssue(id);
+            _issueService.DeleteIssue(id);
         }
     }
 }
