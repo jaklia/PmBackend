@@ -26,7 +26,8 @@ namespace PmBackend.BLL.Services
         public IEnumerable<TimeEntry> GetTimeEntries()
         {
             var timeEntries = ctx.TimeEntries
-                .Include(t => t.Issue)
+                //.Include(t => t.Issue)
+                //.Include(t=> t.User)
                 .ToList();
             return timeEntries;
         }
@@ -39,7 +40,7 @@ namespace PmBackend.BLL.Services
         public TimeEntry GetTimeEntry(int timeEntryId)
         {
             return ctx.TimeEntries
-                .Include(t => t.Issue)
+                //.Include(t => t.Issue)
                 .SingleOrDefault(t => t.Id == timeEntryId);
         }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using PmBackend.BLL.Interfaces;
 using PmBackend.BLL.Services;
 using PmBackend.DAL;
+using PmBackend.DAL.Entities;
 
 namespace PmBackend.API
 {
@@ -32,10 +34,14 @@ namespace PmBackend.API
             services.AddControllers();
             services.AddDbContext<PmDbContext>(options => 
                     options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddIdentity<User, IdentityRole>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+                 
+                .AddEntityFrameworkStores<PmDbContext>();
+
             services.AddTransient<ITimeEntryService, TimeEntryService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IIssueService, IssueService>();
-
+            
             services.AddSwaggerDocument();
         }
 

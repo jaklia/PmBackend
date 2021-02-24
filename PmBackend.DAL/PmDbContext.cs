@@ -1,13 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace PmBackend.DAL
 {
-    public class PmDbContext : DbContext
+    public class PmDbContext : IdentityDbContext<User/*,
+        IdentityRole<int>, 
+        int,
+        IdentityUserClaim<int>,
+        IdentityUserRole<int>,
+        IdentityUserLogin<int>, 
+        IdentityRoleClaim<int>, 
+        IdentityUserToken<int>*/>
     {
         public PmDbContext(DbContextOptions<PmDbContext> options): base(options) { }
 
@@ -54,9 +62,14 @@ namespace PmBackend.DAL
                 );
             modelBuilder.Entity<TimeEntry>()
                 .HasData(
-                      new TimeEntry { Id = 1, Date = DateTime.Now, Hours = 2, IssueId = 1},
-                      new TimeEntry { Id = 2, Date = DateTime.Now, Hours = 5, IssueId = 1 },
-                      new TimeEntry { Id = 3, Date = DateTime.Now, Hours = 10, IssueId = 2 }
+                      new TimeEntry { Id = 1, Date = DateTime.Now, Hours = 2, IssueId = 1, UserId = 1 },
+                      new TimeEntry { Id = 2, Date = DateTime.Now, Hours = 5, IssueId = 1, UserId = 1 },
+                      new TimeEntry { Id = 3, Date = DateTime.Now, Hours = 10, IssueId = 2, UserId = 2 }
+                );
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new User { Id = "1", UserName = "Teszt Elek", Email = "elek@teszt.com"},
+                    new User { Id = "2", UserName = "Példa Béla", Email = "bela@pelda.com" }
                 );
 
         }
