@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
@@ -12,14 +13,18 @@ namespace PmBackend.BLL.Services
     public class UserService : IUserService
     {
         private readonly PmDbContext _ctx;
-        public UserService(PmDbContext ctx)
+        private readonly UserManager<User> _userManager;
+        public UserService(PmDbContext ctx, UserManager<User> userManager)
         {
             _ctx = ctx;
+            _userManager = userManager;
         }
 
         public void DeleteUser(int userId)
         {
-            _ctx.Users.Remove(new User { Id = userId });
+            var userToDelete = _ctx.Users.SingleOrDefault(u => u.Id == userId);
+            _ctx.Users.Remove(userToDelete);
+            //_ctx.Users.Remove(new User { Id = userId });
             _ctx.SaveChanges();
         }
 
@@ -35,6 +40,7 @@ namespace PmBackend.BLL.Services
 
         public User InsertUser(User newUser)
         {
+            
             _ctx.Users.Add(newUser);
             _ctx.SaveChanges();
             return newUser;
@@ -43,8 +49,11 @@ namespace PmBackend.BLL.Services
         public void UpdateUser(int userId, User updatedUser)
         {
             updatedUser.Id = userId;
-            var u = _ctx.Attach(updatedUser);
-            u.State = EntityState.Modified;
+            var user = _ctx.Users.SingleOrDefault(u => u.Id == userId);
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            //var u = _ctx.Users.Update(updatedUser);
+            //u.State = EntityState.Modified;
             _ctx.SaveChanges();
         }
     }

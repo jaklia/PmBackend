@@ -41,6 +41,7 @@ namespace PmBackend.API
             services.AddTransient<ITimeEntryService, TimeEntryService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IIssueService, IssueService>();
+            services.AddTransient<IUserService, UserService>();
             
             services.AddSwaggerDocument();
         }
@@ -56,7 +57,7 @@ namespace PmBackend.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseAuthorization();
 
             app.UseOpenApi();

@@ -31,6 +31,7 @@ namespace PmBackend.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().ToTable("Users");
 
             // Constraints
             modelBuilder.Entity<Issue>()
