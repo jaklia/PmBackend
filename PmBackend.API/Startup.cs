@@ -43,7 +43,7 @@ namespace PmBackend.API
             services.AddTransient<IIssueService, IssueService>();
             services.AddTransient<IUserService, UserService>();
             
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(options =>options.Title = "Projekt menedzsment API");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

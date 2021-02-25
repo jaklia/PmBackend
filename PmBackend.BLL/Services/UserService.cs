@@ -40,7 +40,6 @@ namespace PmBackend.BLL.Services
 
         public User InsertUser(User newUser)
         {
-            
             _ctx.Users.Add(newUser);
             _ctx.SaveChanges();
             return newUser;
@@ -53,7 +52,7 @@ namespace PmBackend.BLL.Services
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
             //var u = _ctx.Users.Update(updatedUser);
-            //u.State = EntityState.Modified;
+            //u.State = EntityState.Modified;      
             _ctx.SaveChanges();
         }
     }
