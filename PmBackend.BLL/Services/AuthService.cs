@@ -80,13 +80,13 @@ namespace PmBackend.BLL.Services
                 //new Claim("firstName", userInfo.FirstName.ToString()),
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
               //  new Claim("role", "Admin"),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token");
             // Adding roles code
             // Roles property is string collection but you can modify Select code if it it's not
-            claimsIdentity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            claimsIdentity.AddClaims(roles.Select(role => new Claim("role", role)));
 
 
             var token = new JwtSecurityToken(

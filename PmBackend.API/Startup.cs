@@ -37,7 +37,7 @@ namespace PmBackend.API
             services.AddDbContext<PmDbContext>(options => 
                     options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
-            services.AddIdentity<User, IdentityRole<int>>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+            services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<PmDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -91,8 +91,10 @@ namespace PmBackend.API
 
             services.AddAuthorization(config =>
             {
+                config.DefaultPolicy = Policies.UserPolicy();
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
+
             });
 
             #region 401 on unauthorized and no redirect

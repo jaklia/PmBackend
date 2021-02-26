@@ -11,7 +11,7 @@ using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.Controllers
 {
-   
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -23,7 +23,6 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users
-        [Authorize(Policy = Policies.User)]
         [HttpGet]
         public IEnumerable<User> Get()
         {
@@ -31,7 +30,6 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users/5
-        [Authorize/*(Policy = Policies.Admin)*/]
         [HttpGet("{id}", Name = "GetUser")]
         public User Get(int id)
         {
@@ -39,7 +37,6 @@ namespace PmBackend.API.Controllers
         }
 
         // POST: api/Users
-        [Authorize]
         [HttpPost]
         public User Post([FromBody] User value)
         {
@@ -48,7 +45,6 @@ namespace PmBackend.API.Controllers
         }
 
         // PUT: api/Users/5
-        [Authorize]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] User value)
         {
@@ -56,7 +52,6 @@ namespace PmBackend.API.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [Authorize]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
