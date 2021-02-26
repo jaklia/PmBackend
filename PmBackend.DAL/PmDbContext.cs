@@ -58,7 +58,7 @@ namespace PmBackend.DAL
                 );
             modelBuilder.Entity<Issue>()
                 .HasData(
-                    new Issue { Id = 1, Subject = "Sample Issue 1", ProjectId = 1},
+                    new Issue { Id = 1, Subject = "Sample Issue 1", ProjectId = 1 },
                     new Issue { Id = 2, Subject = "Sample Issue 2", ProjectId = 1 }
                 );
             modelBuilder.Entity<TimeEntry>()
@@ -69,7 +69,7 @@ namespace PmBackend.DAL
                 );
             modelBuilder.Entity<User>()
                 .HasData(
-                    new User { Id = 1, UserName = "Teszt Elek", Email = "elek@teszt.com"},
+                    new User { Id = 1, UserName = "Teszt Elek", Email = "elek@teszt.com" },
                     new User { Id = 2, UserName = "Példa Béla", Email = "bela@pelda.com" }
                 );
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PmBackend.BLL.Interfaces;
@@ -9,6 +11,7 @@ using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -20,6 +23,7 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users
+        [Authorize]
         [HttpGet]
         public IEnumerable<User> Get()
         {
@@ -27,6 +31,7 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users/5
+        [Authorize]
         [HttpGet("{id}", Name = "GetUser")]
         public User Get(int id)
         {
@@ -34,6 +39,7 @@ namespace PmBackend.API.Controllers
         }
 
         // POST: api/Users
+        [Authorize]
         [HttpPost]
         public User Post([FromBody] User value)
         {
@@ -42,6 +48,7 @@ namespace PmBackend.API.Controllers
         }
 
         // PUT: api/Users/5
+        [Authorize]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] User value)
         {
@@ -49,6 +56,7 @@ namespace PmBackend.API.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
+        [Authorize]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

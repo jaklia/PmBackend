@@ -8,9 +8,4 @@
     <ProjectReference Include="..\PmBackend.DAL\PmBackend.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>
