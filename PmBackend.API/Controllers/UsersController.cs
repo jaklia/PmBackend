@@ -23,7 +23,7 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users
-        [Authorize]
+        [Authorize(Policy = Policies.User)]
         [HttpGet]
         public IEnumerable<User> Get()
         {

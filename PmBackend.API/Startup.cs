@@ -41,18 +41,21 @@ namespace PmBackend.API
                 .AddEntityFrameworkStores<PmDbContext>()
                 .AddDefaultTokenProviders();
 
+          
+
             //services.AddIdentityCore<User>()
             //    .AddEntityFrameworkStores<PmDbContext>()
             //    .AddDefaultTokenProviders()
             //    .AddRoles<IdentityRole<int>>().AddRoleManager<RoleManager<IdentityRole<int>>>();
             //    //.AddSignInManager<SignInManager<User>>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
+           // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
                .AddJwtBearer(options => {
                    options.RequireHttpsMetadata = false;
                    options.SaveToken = true;
@@ -81,7 +84,11 @@ namespace PmBackend.API
             //        defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
 
             //    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            //    //options.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+            //    //options.AddPolicy(Policies.User, Policies.UserPolicy());
+
             //});
+
             services.AddAuthorization(config =>
             {
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
@@ -111,9 +118,10 @@ namespace PmBackend.API
             services.AddTransient<IUserService, UserService>();
 
             services.AddControllers();
-            services.AddSwaggerDocument(options => { 
+            services.AddSwaggerDocument(options =>
+            {
                 options.Title = "Projekt menedzsment API";
-                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
