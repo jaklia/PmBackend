@@ -31,7 +31,7 @@ namespace PmBackend.API.Controllers
         }
 
         // GET: api/Users/5
-        [Authorize]
+        [Authorize/*(Policy = Policies.Admin)*/]
         [HttpGet("{id}", Name = "GetUser")]
         public User Get(int id)
         {

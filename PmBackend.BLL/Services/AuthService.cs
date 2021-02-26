@@ -46,7 +46,8 @@ namespace PmBackend.BLL.Services
                 throw new AuthenticationException("Incorrect password");
             } else
             {
-                return new LoginResponse { User= user, AccessToken = GenerateJWT(user)};
+                var token = await GenerateJWT(user);
+                return new LoginResponse { User= user, AccessToken = token};
             }
 
         }
@@ -67,24 +68,32 @@ namespace PmBackend.BLL.Services
             return false;
         }
 
-        string GenerateJWT(User userInfo)
+        async Task<string> GenerateJWT(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 //new Claim("firstName", userInfo.FirstName.ToString()),
-                //new Claim("role", userInfo.UserType),
-                new Claim("role", "User"),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+              //  new Claim("role", "Admin"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token");
+            // Adding roles code
+            // Roles property is string collection but you can modify Select code if it it's not
+            claimsIdentity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
-                claims: claims,
+                //claims: claims,
+                claims: claimsIdentity.Claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials
             );
