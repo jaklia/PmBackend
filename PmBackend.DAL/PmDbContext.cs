@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PmBackend.DAL.Entities;
+using PmBackend.DAL.SeedConfig;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,10 +68,27 @@ namespace PmBackend.DAL
                       new TimeEntry { Id = 2, Date = DateTime.Now, Hours = 5, IssueId = 1, UserId = 1 },
                       new TimeEntry { Id = 3, Date = DateTime.Now, Hours = 10, IssueId = 2, UserId = 2 }
                 );
-            modelBuilder.Entity<User>()
+
+            //modelBuilder.Entity<User>()
+            //    .HasData(
+            //        new User { Id = 1, UserName = "Teszt Elek", Email = "elek@teszt.com" },
+            //        new User { Id = 2, UserName = "Példa Béla", Email = "bela@pelda.com" },
+            //        new User { Id = 3, UserName = "Teszt Admin", Email = "admin@teszt.com" }
+            //    );
+
+            modelBuilder.ApplyConfiguration(new UserSeed());
+
+            modelBuilder.Entity<IdentityRole<int>>()
                 .HasData(
-                    new User { Id = 1, UserName = "Teszt Elek", Email = "elek@teszt.com" },
-                    new User { Id = 2, UserName = "Példa Béla", Email = "bela@pelda.com" }
+                    new IdentityRole<int> {Id = 1, Name = "Admin" },
+                    new IdentityRole<int> { Id = 2, Name = "User" }
+                ); 
+            modelBuilder.Entity<IdentityUserRole<int>>()
+                .HasData(
+                    new IdentityUserRole<int> { UserId = 1, RoleId = 2},
+                    new IdentityUserRole<int> { UserId = 2, RoleId = 2},
+                    new IdentityUserRole<int> { UserId = 3, RoleId = 2},
+                    new IdentityUserRole<int> { UserId = 3, RoleId = 1}
                 );
 
         }

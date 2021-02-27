@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210227011124_seed2.cs" />
+    <Compile Remove="Migrations\20210227011124_seed2.Designer.cs" />
+    <Compile Remove="Migrations\20210227012030_seed2.cs" />
+    <Compile Remove="Migrations\20210227012030_seed2.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.12" />
