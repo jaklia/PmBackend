@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PmBackend.BLL.DTOs.Auth;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.BLL.Services;
 
@@ -37,9 +39,22 @@ namespace PmBackend.API.Controllers
         // POST: api/Auth
         [Route("login")]
         [HttpPost]
-        public async Task<LoginResponse> Post([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResponse>> Post([FromBody] LoginRequest loginRequest)
         {
-            return await _authService.Login(loginRequest);
+            try
+            {
+                return await _authService.Login(loginRequest);
+            }
+            catch (EntityNotFoundException)
+            {
+
+                return NotFound();
+            }
+            catch (AuthenticationException)
+            {
+                return Unauthorized();
+            }
+            
         }
         // POST: api/Auth
         [Route("register")]
