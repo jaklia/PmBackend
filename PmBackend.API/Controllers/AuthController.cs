@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PmBackend.BLL.DTOs.Auth;
@@ -37,6 +38,7 @@ namespace PmBackend.API.Controllers
         //}
 
         // POST: api/Auth
+        [AllowAnonymous]
         [Route("login")]
         [HttpPost]
         public async Task<ActionResult<LoginResponse>> Post([FromBody] LoginRequest loginRequest)
