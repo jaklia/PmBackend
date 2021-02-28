@@ -76,17 +76,14 @@ namespace PmBackend.BLL.Services
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                //new Claim("firstName", userInfo.FirstName.ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-              //  new Claim("role", "Admin"),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token");
-            // Adding roles code
-            // Roles property is string collection but you can modify Select code if it it's not
-            claimsIdentity.AddClaims(roles.Select(role => new Claim("role", role)));
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,  "Token");
+            // add the roles to the claims
+            claimsIdentity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
 
             var token = new JwtSecurityToken(
