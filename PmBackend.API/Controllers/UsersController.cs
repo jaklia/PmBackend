@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using PmBackend.BLL.Common;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.Controllers
 {
-    [Authorize]
+   
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -27,6 +28,7 @@ namespace PmBackend.API.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
+            var user = User; // User prop from ControllerBase (to check claims)
             return _userService.GetUsers();
         }
 
@@ -35,6 +37,13 @@ namespace PmBackend.API.Controllers
         public User Get(int id)
         {
             return _userService.GetUser(id);
+        }
+
+        [Authorize(Roles ="Admin")]
+        [HttpGet("{id}/entries", Name = "entries")]
+        public string GetEntries(int id)
+        {
+            return "entries";
         }
 
         // POST: api/Users

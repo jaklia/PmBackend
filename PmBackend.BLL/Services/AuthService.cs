@@ -81,7 +81,7 @@ namespace PmBackend.BLL.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,  "Token");
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,  "Bearer");
             // add the roles to the claims
             claimsIdentity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

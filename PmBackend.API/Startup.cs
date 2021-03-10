@@ -1,5 +1,8 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,20 +65,12 @@ namespace PmBackend.API
                    //    and it will randomly redirect to non-existent pages, wich results in 404
                    //      configuring those pages to existing ones, will result in 200 OK
                    //       and then we need to set the status code to 401/403 manually
-                   
+
                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
-                  
+
                } )
-
-               //services.AddAuthentication(options =>
-               //{
-               //    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-               //    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-               //    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-
-               //})
                .AddJwtBearer(options => {
                    options.RequireHttpsMetadata = false;
                    options.SaveToken = true;
@@ -93,9 +88,11 @@ namespace PmBackend.API
                    options.Events = new JwtBearerEvents();
                    options.Events.OnTokenValidated = (ctx) => {
                        var user = ctx.HttpContext.User;
+                       var claims = ctx.Principal.Claims;
+                     //  var userid = int.Parse(claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
                        return Task.CompletedTask;
                    };
-                   // these only needed to be able to set the breakpoints
+                   // these only needed to be able to set the breakpoints to see what happens
                    options.Events.OnAuthenticationFailed = (ctx) => {
                        var asd = ctx.Result;
                        return Task.CompletedTask;
@@ -123,9 +120,10 @@ namespace PmBackend.API
 
             services.AddAuthorization(config =>
             {
-                config.DefaultPolicy = Policies.UserPolicy();
-                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-                config.AddPolicy(Policies.User, Policies.UserPolicy());
+                config.FallbackPolicy = Policies.UserPolicy(JwtBearerDefaults.AuthenticationScheme);
+                config.DefaultPolicy = Policies.UserPolicy(JwtBearerDefaults.AuthenticationScheme);
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy(JwtBearerDefaults.AuthenticationScheme));
+                config.AddPolicy(Policies.User, Policies.UserPolicy(JwtBearerDefaults.AuthenticationScheme));
 
             });
 

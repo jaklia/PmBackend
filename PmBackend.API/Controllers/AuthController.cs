@@ -47,14 +47,14 @@ namespace PmBackend.API.Controllers
             {
                 return await _authService.Login(loginRequest);
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
 
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (AuthenticationException)
+            catch (AuthenticationException e)
             {
-                return Unauthorized();
+                return Unauthorized(e.Message);
             }
             
         }
