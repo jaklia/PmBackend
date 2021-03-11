@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PmBackend.DAL;
 
 namespace PmBackend.DAL.Migrations
 {
     [DbContext(typeof(PmDbContext))]
-    partial class PmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210311043729_newEntities")]
+    partial class newEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,20 +48,6 @@ namespace PmBackend.DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConcurrencyStamp = "aa8d12e8-41f6-438a-ac9e-cb2c210834c8",
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ConcurrencyStamp = "2c4f6beb-977a-412b-8f27-79c2cf5c2cc8",
-                            Name = "User"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -142,28 +130,6 @@ namespace PmBackend.DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -216,26 +182,6 @@ namespace PmBackend.DAL.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Issues");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DueDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EstimatedHours = 0,
-                            ProjectId = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Subject = "Sample Issue 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DueDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EstimatedHours = 0,
-                            ProjectId = 1,
-                            StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Subject = "Sample Issue 2"
-                        });
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.Leave", b =>
@@ -301,18 +247,6 @@ namespace PmBackend.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Sample Project 1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Sample Project 2"
-                        });
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.Room", b =>
@@ -369,7 +303,7 @@ namespace PmBackend.DAL.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 3, 11, 5, 43, 56, 622, DateTimeKind.Local).AddTicks(8991));
+                        .HasDefaultValue(new DateTime(2021, 3, 11, 5, 37, 28, 405, DateTimeKind.Local).AddTicks(2252));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -391,35 +325,6 @@ namespace PmBackend.DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TimeEntries");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(2021, 3, 11, 5, 43, 56, 648, DateTimeKind.Local).AddTicks(9259),
-                            Description = "Write specification",
-                            IssueId = 1,
-                            Minutes = 120,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(2021, 3, 11, 5, 43, 56, 649, DateTimeKind.Local).AddTicks(6183),
-                            Description = "init project, base navigation system",
-                            IssueId = 1,
-                            Minutes = 300,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(2021, 3, 11, 5, 43, 56, 649, DateTimeKind.Local).AddTicks(6403),
-                            Description = "API research",
-                            IssueId = 2,
-                            Minutes = 600,
-                            UserId = 2
-                        });
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.User", b =>
@@ -487,53 +392,6 @@ namespace PmBackend.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "500333fb-266a-41ca-b257-65108a26acd3",
-                            Email = "user@teszt.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@TESZT.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "4bd51bb8-236c-453a-a7e3-eab64c50495a",
-                            TwoFactorEnabled = false,
-                            UserName = "Teszt Elek"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "f1802d88-a476-4ede-925e-68289f3bd0c5",
-                            Email = "bela@pelda.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "BELA@PELDA.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "ddf779a0-d003-466f-b13c-74eccd4a47f9",
-                            TwoFactorEnabled = false,
-                            UserName = "Példa Béla"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "a134b48b-abb7-4d50-8a69-0bf80dc14380",
-                            Email = "admin@teszt.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@TESZT.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "5a99aaad-16f5-4712-9788-a09e69de040b",
-                            TwoFactorEnabled = false,
-                            UserName = "Teszt Admin"
-                        });
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.UserMeeting", b =>

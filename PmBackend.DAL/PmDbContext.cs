@@ -49,25 +49,33 @@ namespace PmBackend.DAL
                 .IsRequired()
                 .HasDefaultValue(DateTime.Now);
             modelBuilder.Entity<TimeEntry>()
-                .Property(t => t.Hours)
+                .Property(t => t.Minutes)
                 .IsRequired();
 
             // Seed
-            modelBuilder.Entity<Project>()
-                .HasData(
-                    new Project { Id = 1, Name = "Sample Project 1"}
-                );
-            modelBuilder.Entity<Issue>()
-                .HasData(
-                    new Issue { Id = 1, Subject = "Sample Issue 1", ProjectId = 1 },
-                    new Issue { Id = 2, Subject = "Sample Issue 2", ProjectId = 1 }
-                );
-            modelBuilder.Entity<TimeEntry>()
-                .HasData(
-                      new TimeEntry { Id = 1, Date = DateTime.Now, Hours = 2, IssueId = 1, UserId = 1 },
-                      new TimeEntry { Id = 2, Date = DateTime.Now, Hours = 5, IssueId = 1, UserId = 1 },
-                      new TimeEntry { Id = 3, Date = DateTime.Now, Hours = 10, IssueId = 2, UserId = 2 }
-                );
+            //modelBuilder.Entity<Project>()
+            //    .HasData(
+            //        new Project { Id = 1, Name = "Sample Project 1"}
+            //    );
+            //modelBuilder.Entity<Issue>()
+            //    .HasData(
+            //        new Issue { Id = 1, Subject = "Sample Issue 1", ProjectId = 1 },
+            //        new Issue { Id = 2, Subject = "Sample Issue 2", ProjectId = 1 }
+            //    );
+            //modelBuilder.Entity<TimeEntry>()
+            //    .HasData(
+            //          new TimeEntry { Id = 1, Date = DateTime.Now, Minutes = 2*60, IssueId = 1, UserId = 1 },
+            //          new TimeEntry { Id = 2, Date = DateTime.Now, Minutes = 5*60, IssueId = 1, UserId = 1 },
+            //          new TimeEntry { Id = 3, Date = DateTime.Now, Minutes = 10*60, IssueId = 2, UserId = 2 }
+            //    );
+
+            modelBuilder.ApplyConfiguration(new ProjectSeed());
+            modelBuilder.ApplyConfiguration(new IssueSeed());
+            modelBuilder.ApplyConfiguration(new TimeEntrySeed());
+            modelBuilder.ApplyConfiguration(new UserSeed());
+            modelBuilder.ApplyConfiguration(new RoleSeed());
+            modelBuilder.ApplyConfiguration(new UserRoleSeed());
+            modelBuilder.ApplyConfiguration(new RoomSeed());
 
             //modelBuilder.Entity<User>()
             //    .HasData(
@@ -75,21 +83,26 @@ namespace PmBackend.DAL
             //        new User { Id = 2, UserName = "Példa Béla", Email = "bela@pelda.com" },
             //        new User { Id = 3, UserName = "Teszt Admin", Email = "admin@teszt.com" }
             //    );
+            //modelBuilder.Entity<IdentityRole<int>>()
+            //    .HasData(
+            //        new IdentityRole<int> {Id = 1, Name = "Admin" },
+            //        new IdentityRole<int> { Id = 2, Name = "User" }
+            //    ); 
+            //modelBuilder.Entity<IdentityUserRole<int>>()
+            //    .HasData(
+            //        new IdentityUserRole<int> { UserId = 1, RoleId = 2},
+            //        new IdentityUserRole<int> { UserId = 2, RoleId = 2},
+            //        new IdentityUserRole<int> { UserId = 3, RoleId = 2},
+            //        new IdentityUserRole<int> { UserId = 3, RoleId = 1}
+            //    );
 
-            modelBuilder.ApplyConfiguration(new UserSeed());
-
-            modelBuilder.Entity<IdentityRole<int>>()
-                .HasData(
-                    new IdentityRole<int> {Id = 1, Name = "Admin" },
-                    new IdentityRole<int> { Id = 2, Name = "User" }
-                ); 
-            modelBuilder.Entity<IdentityUserRole<int>>()
-                .HasData(
-                    new IdentityUserRole<int> { UserId = 1, RoleId = 2},
-                    new IdentityUserRole<int> { UserId = 2, RoleId = 2},
-                    new IdentityUserRole<int> { UserId = 3, RoleId = 2},
-                    new IdentityUserRole<int> { UserId = 3, RoleId = 1}
-                );
+            //modelBuilder.Entity<Room>()
+            //    .HasData(
+            //        new Room { Id = 1, Name = "R11", Capacity= 20},
+            //        new Room { Id = 2, Name = "R22", Capacity= 50},
+            //        new Room { Id = 3, Name = "C111", Capacity= 100},
+            //        new Room { Id = 4, Name = "M44", Capacity= 20}
+            //    );
 
         }
 
