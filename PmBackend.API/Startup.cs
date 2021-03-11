@@ -157,6 +157,9 @@ namespace PmBackend.API
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IIssueService, IssueService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IMeetingService, MeetingService>();
+            services.AddTransient<ILeaveService, LeaveService>();
 
             services.AddControllers();
             services.AddSwaggerDocument(options =>

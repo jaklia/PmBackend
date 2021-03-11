@@ -28,6 +28,9 @@ namespace PmBackend.DAL
         public DbSet<Issue> Issues { get; set;  }
         public DbSet<Project> Projects { get; set; }
         public DbSet<TimeEntry> TimeEntries { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
