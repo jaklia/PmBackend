@@ -18,24 +18,24 @@ namespace PmBackend.BLL.Services
 
         public void DeleteLeave(int leaveId)
         {
-            _ctx.Leaves.Remove(new Leave { Id = leaveId });
+            _ctx.Leave.Remove(new Leave { Id = leaveId });
             _ctx.SaveChanges();
         }
 
         public Leave GetLeave(int leaveId)
         {
-            return _ctx.Leaves
+            return _ctx.Leave
                 .SingleOrDefault(a => a.Id == leaveId);
         }
 
         public IEnumerable<Leave> GetLeaves()
         {
-            return _ctx.Leaves.ToList();
+            return _ctx.Leave.ToList();
         }
 
         public Leave InsertLeave(Leave newLeave)
         {
-            _ctx.Leaves.Add(newLeave);
+            _ctx.Leave.Add(newLeave);
             _ctx.SaveChanges();
             return newLeave;
         }

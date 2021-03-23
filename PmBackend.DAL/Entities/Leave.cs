@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace PmBackend.DAL.Entities
 {
+    
    public class Leave
     {
         public int Id { get; set; }

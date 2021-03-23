@@ -18,25 +18,25 @@ namespace PmBackend.BLL.Services
         }
         public void DeleteMeeting(int meetingId)
         {
-            _ctx.Meetings.Remove(new Meeting { Id = meetingId });
+            _ctx.Meeting.Remove(new Meeting { Id = meetingId });
             _ctx.SaveChanges();
         }
 
         public Meeting GetMeeting(int meetingId)
         {
-            return _ctx.Meetings
+            return _ctx.Meeting
                 .SingleOrDefault(m => m.Id == meetingId);
         }
 
         public IEnumerable<Meeting> GetMeetings()
         {
-            return _ctx.Meetings.ToList();
+            return _ctx.Meeting.ToList();
         }
 
         public Meeting InsertMeeting(Meeting newMeeting)
         {
            
-            _ctx.Meetings.Add(newMeeting);
+            _ctx.Meeting.Add(newMeeting);
             _ctx.SaveChanges();
             return newMeeting;
         }

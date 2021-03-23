@@ -17,23 +17,23 @@ namespace PmBackend.BLL.Services
         }
         public void DeleteRoom(int roomId)
         {
-            _ctx.Rooms.Remove(new Room { Id = roomId });
+            _ctx.Room.Remove(new Room { Id = roomId });
         }
 
         public Room GetRoom(int roomId)
         {
-            return _ctx.Rooms
+            return _ctx.Room
                 .SingleOrDefault(r => r.Id == roomId);
         }
 
         public IEnumerable<Room> GetRooms()
         {
-            return _ctx.Rooms.ToList();
+            return _ctx.Room.ToList();
         }
 
         public Room InsertRoom(Room newRoom)
         {
-            _ctx.Rooms.Add(newRoom);
+            _ctx.Room.Add(newRoom);
             _ctx.SaveChanges();
             return newRoom;
         }
