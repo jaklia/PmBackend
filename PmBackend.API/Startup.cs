@@ -175,6 +175,8 @@ namespace PmBackend.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
 
@@ -183,8 +185,6 @@ namespace PmBackend.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
