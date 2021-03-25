@@ -30,6 +30,11 @@ namespace PmBackend.BLL.Services
                 .SingleOrDefault(p => p.Id == projectId);
         }
 
+        public IEnumerable<Issue> GetProjectIssues(int projectId)
+        {
+            return _ctx.Issues.Where(i => i.ProjectId == projectId).ToList();
+        }
+
         public IEnumerable<Project> GetProjects()
         {
             return _ctx.Projects.ToList();

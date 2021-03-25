@@ -11,6 +11,8 @@ namespace PmBackend.BLL.Interfaces
         IEnumerable<Project> GetProjects();
         IEnumerable<Project> GetProjectsForUser(int userId);
 
+        IEnumerable<Issue> GetProjectIssues(int projectId);
+
         Project InsertProject(Project newProject);
         void UpdateProject(int projectId, Project updatedProject);
         void DeleteProject(int projectId);

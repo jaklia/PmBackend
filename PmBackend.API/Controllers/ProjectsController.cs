@@ -31,6 +31,12 @@ namespace PmBackend.API.Controllers
             return _projectService.GetProject(id);
         }
 
+        [HttpGet("{id}/issues", Name = "GetProjectIssues")]
+        public IEnumerable<Issue> GetProjectIssues(int id)
+        {
+            return _projectService.GetProjectIssues(id);
+        }
+
         // POST: api/Projects
         [HttpPost]
         public Project Post([FromBody] Project value)
