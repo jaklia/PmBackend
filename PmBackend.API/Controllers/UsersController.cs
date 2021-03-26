@@ -39,11 +39,11 @@ namespace PmBackend.API.Controllers
             return _userService.GetUser(id);
         }
 
-        [Authorize(Roles ="Admin")]
-        [HttpGet("{id}/entries", Name = "entries")]
-        public string GetEntries(int id)
+        
+        [HttpGet("{id}/timeentries", Name = "GetUserTimeEntries")]
+        public IEnumerable<TimeEntry> GetUserTimeEntries(int id)
         {
-            return "entries";
+            return _userService.GetUserTimeEntries(id);
         }
 
         // POST: api/Users

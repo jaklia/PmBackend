@@ -35,10 +35,10 @@ namespace PmBackend.BLL.Services
             return _ctx.Issues.ToList();
         }
 
-        public IEnumerable<Issue> GetIssuesForProject(int projectId)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<Issue> GetIssuesForProject(int projectId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public Issue InsertIssue(Issue newIssue)
         {

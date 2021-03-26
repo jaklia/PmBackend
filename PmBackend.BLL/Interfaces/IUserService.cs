@@ -9,6 +9,9 @@ namespace PmBackend.BLL.Interfaces
     {
         User GetUser(int userId);
         IEnumerable<User> GetUsers();
+
+        IEnumerable<TimeEntry> GetUserTimeEntries(int userId);
+
         User InsertUser(User newUser);
         void UpdateUser(int userId, User UpdatedUser);
         void DeleteUser(int userId);

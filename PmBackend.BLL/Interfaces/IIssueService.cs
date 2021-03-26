@@ -7,7 +7,7 @@ namespace PmBackend.BLL.Interfaces
     {
         Issue GetIssue(int issueId);
         IEnumerable<Issue> GetIssues();
-        IEnumerable<Issue> GetIssuesForProject(int projectId);
+       // IEnumerable<Issue> GetIssuesForProject(int projectId);
 
         Issue InsertIssue(Issue newIssue);
         void UpdateIssue(int issueId, Issue updatedIssue);

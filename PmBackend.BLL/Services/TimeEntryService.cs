@@ -32,10 +32,10 @@ namespace PmBackend.BLL.Services
             return timeEntries;
         }
 
-        public IEnumerable<TimeEntry> GetTimeEntriesForUser(int userId)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<TimeEntry> GetTimeEntriesForUser(int userId)
+        //{
+        //    return _ctx.TimeEntries.Where(t => t.UserId == userId).ToList();
+        //}
 
         public TimeEntry GetTimeEntry(int timeEntryId)
         {

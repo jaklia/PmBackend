@@ -38,7 +38,13 @@ namespace PmBackend.BLL.Services
             return _ctx.Users.ToList();
         }
 
-        public User InsertUser(User newUser)
+        public IEnumerable<TimeEntry> GetUserTimeEntries(int userId)
+        {
+            return _ctx.TimeEntries.Where(t => t.UserId == userId).ToList();
+            //return _ctx.Users.Include(u=>u.TimeEntries).FirstOrDefault(u => u.Id == userId)?.TimeEntries.ToList();
+        }
+
+        public User InsertUser(User newUser) // don't need this, use registration
         {
             _ctx.Users.Add(newUser);
             _ctx.SaveChanges();

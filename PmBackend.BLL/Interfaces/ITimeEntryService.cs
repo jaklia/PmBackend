@@ -10,7 +10,7 @@ namespace PmBackend.BLL.Interfaces
         TimeEntry GetTimeEntry(int timeEntryId);
 
         IEnumerable<TimeEntry> GetTimeEntries();
-        IEnumerable<TimeEntry> GetTimeEntriesForUser(int userId);
+       // IEnumerable<TimeEntry> GetTimeEntriesForUser(int userId);
 
 
         TimeEntry InsertTimeEntry(TimeEntry newTimeEntry);
