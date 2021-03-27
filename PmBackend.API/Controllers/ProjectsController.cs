@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
@@ -19,44 +21,74 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Projects
         [HttpGet]
-        public IEnumerable<Project> Get()
+        public async Task<ActionResult<IEnumerable<Project>>> GetProjectsAsync()
         {
-            return _projectService.GetProjects();
+            var projects = await _projectService.GetProjectsAsync();
+            return Ok(projects);
         }
 
         // GET: api/Projects/5
-        [HttpGet("{id}", Name = "GetProject")]
-        public Project Get(int id)
+        [HttpGet("{id}"/*, Name = "GetProject"*/)]
+        public async Task<ActionResult<Project>> GetProjectAsync(int id)
         {
-            return _projectService.GetProject(id);
+            try
+            {
+                var project = await _projectService.GetProjectAsync(id);
+                return Ok(project);
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
-        [HttpGet("{id}/issues", Name = "GetProjectIssues")]
-        public IEnumerable<Issue> GetProjectIssues(int id)
-        {
-            return _projectService.GetProjectIssues(id);
+        [HttpGet("{id}/issues"/*, Name = "GetProjectIssues"*/)]
+        public async Task<ActionResult<IEnumerable<Issue>>> GetProjectIssuesAsync(int id)
+        { 
+            try
+            {
+                var issues = await _projectService.GetProjectIssuesAsync(id);
+                return Ok(issues);
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // POST: api/Projects
         [HttpPost]
-        public Project Post([FromBody] Project value)
+        public async Task<ActionResult<Project>> CreateProjectAsync([FromBody] Project newProject)
         {
-            var created = _projectService.InsertProject(value);
+            var created =  await _projectService.InsertProjectAsync(newProject);
             return created;
         }
 
         // PUT: api/Projects/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Project value)
+        public async Task<ActionResult> UpdateProjectAsync(int id, [FromBody] Project project)
         {
-            _projectService.UpdateProject(id, value);
+            try
+            {
+                await _projectService.UpdateProjectAsync(id, project);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteProjectAsync(int id)
         {
-            _projectService.DeleteProject(id);
+            try
+            {
+                await _projectService.DeleteProjectAsync(id);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

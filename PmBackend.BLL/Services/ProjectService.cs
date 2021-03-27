@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
@@ -6,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Services
 {
@@ -17,47 +20,72 @@ namespace PmBackend.BLL.Services
             _ctx = ctx;
         }
 
-        public void DeleteProject(int projectId)
+       
+      public async Task DeleteProjectAsync(int projectId)
         {
             _ctx.Projects.Remove(new Project { Id = projectId });
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Projects.SingleOrDefaultAsync(p => p.Id == projectId) == null)
+                {
+                    throw new EntityNotFoundException("Project not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
-
-        public Project GetProject(int projectId)
+        
+        public async Task<Project> GetProjectAsync(int projectId)
         {
-            return _ctx.Projects
-                .Include(p=> p.Issues)
-                .SingleOrDefault(p => p.Id == projectId);
+            return await _ctx.Projects
+                .SingleOrDefaultAsync(p => p.Id == projectId)
+                ?? throw new EntityNotFoundException("Project not found");
         }
 
-        public IEnumerable<Issue> GetProjectIssues(int projectId)
+        public async Task<IEnumerable<Issue>> GetProjectIssuesAsync(int projectId)
         {
-            return _ctx.Issues.Where(i => i.ProjectId == projectId).ToList();
+            return await _ctx.Issues.Where(i => i.ProjectId == projectId).ToListAsync();
         }
 
-        public IEnumerable<Project> GetProjects()
+       public async Task<IEnumerable<Project>> GetProjectsAsync()
         {
-            return _ctx.Projects.ToList();
+            return await _ctx.Projects.ToListAsync();
         }
 
-        public IEnumerable<Project> GetProjectsForUser(int userId)
-        {
-            throw new NotImplementedException();
-        }
+        //public IEnumerable<Project> GetProjectsForUser(int userId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Project InsertProject(Project newProject)
+        public async Task<Project> InsertProjectAsync(Project newProject)
         {
             _ctx.Projects.Add(newProject);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
             return newProject;
         }
 
-        public void UpdateProject(int projectId, Project updatedProject)
+        public async Task UpdateProjectAsync(int projectId, Project updatedProject)
         {
             updatedProject.Id = projectId;
             var p = _ctx.Attach(updatedProject);
             p.State = EntityState.Modified;
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Projects.SingleOrDefaultAsync(p => p.Id == projectId) == null)
+                {
+                    throw new EntityNotFoundException("Project not found");
+                } else 
+                {
+                    throw;
+                }
+            }
         }
     }
 }

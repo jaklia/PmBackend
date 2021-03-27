@@ -41,15 +41,15 @@ namespace PmBackend.API.Controllers
         [AllowAnonymous]
         [Route("login")]
         [HttpPost]
-        public async Task<ActionResult<LoginResponse>> Post([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResponse>> LoginAsync([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                return await _authService.Login(loginRequest);
+                var res = await _authService.Login(loginRequest);
+                return Ok(res);
             }
             catch (EntityNotFoundException e)
             {
-
                 return NotFound(e.Message);
             }
             catch (AuthenticationException e)

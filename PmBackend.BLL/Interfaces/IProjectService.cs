@@ -2,20 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Interfaces
 {
     public interface IProjectService
     {
-        Project GetProject(int id);
-        IEnumerable<Project> GetProjects();
-        IEnumerable<Project> GetProjectsForUser(int userId);
+        public Task<Project> GetProjectAsync(int projectId);
+        public Task<IEnumerable<Project>> GetProjectsAsync();
+      //  Task<IEnumerable<Project>> GetProjectsForUser(int userId);
 
-        IEnumerable<Issue> GetProjectIssues(int projectId);
+        public Task<IEnumerable<Issue>> GetProjectIssuesAsync(int projectId);
 
-        Project InsertProject(Project newProject);
-        void UpdateProject(int projectId, Project updatedProject);
-        void DeleteProject(int projectId);
+        public Task<Project> InsertProjectAsync(Project newProject);
+        public Task UpdateProjectAsync(int projectId, Project updatedProject);
+        public Task DeleteProjectAsync(int projectId);
         
     }
 }
