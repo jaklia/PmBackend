@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Services
 {
@@ -17,42 +19,63 @@ namespace PmBackend.BLL.Services
             _ctx = ctx;
         }
 
-        public void DeleteIssue(int issueId)
+        public async Task DeleteIssueAsync(int issueId)
         {
             _ctx.Issues.Remove(new Issue { Id = issueId });
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Issues.FirstOrDefaultAsync(i => i.Id == issueId) == null)
+                {
+                    throw new EntityNotFoundException("Issue not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
-
-        public Issue GetIssue(int issueId)
+        
+        public async Task<Issue> GetIssueAsync(int issueId)
         {
-            return _ctx.Issues
-              //  .Include(i => i.Project)
-                .SingleOrDefault(i => i.Id == issueId);
+            return await _ctx.Issues
+                //  .Include(i => i.Project)
+                .SingleOrDefaultAsync(i => i.Id == issueId)
+                ?? throw new EntityNotFoundException("Issue not found");
         }
-
-        public IEnumerable<Issue> GetIssues()
+       
+        public async Task<IEnumerable<Issue>> GetIssuesAsync()
         {
-            return _ctx.Issues.ToList();
+            return await _ctx.Issues.ToListAsync();
         }
 
-        //public IEnumerable<Issue> GetIssuesForProject(int projectId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public Issue InsertIssue(Issue newIssue)
+        public async Task<Issue> InsertIssueAsync(Issue newIssue)
         {
             _ctx.Issues.Add(newIssue);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
             return newIssue;
         }
 
-        public void UpdateIssue(int issueId, Issue updatedIssue)
+        public async Task UpdateIssueAsync(int issueId, Issue updatedIssue)
         {
             updatedIssue.Id = issueId;
             var i = _ctx.Attach(updatedIssue);
             i.State = EntityState.Modified;
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Issues.FirstOrDefaultAsync(i => i.Id == issueId) == null)
+                {
+                    throw new EntityNotFoundException("Issue not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
     }
 }

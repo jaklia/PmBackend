@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
@@ -19,38 +21,60 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Issues
         [HttpGet]
-        public IEnumerable<Issue> Get()
+        public async Task<ActionResult<IEnumerable<Issue>>> GetIssuesAsync()
         {
-            return _issueService.GetIssues();
+            var issues = await _issueService.GetIssuesAsync();
+            return Ok(issues);
         }
 
         // GET: api/Issues/5
         [HttpGet("{id}", Name = "GetIssue")]
-        public Issue Get(int id)
+        public async Task<ActionResult<Issue>> GetIssueAsync(int id)
         {
-            return _issueService.GetIssue(id);
+            try
+            {
+                var issue = await _issueService.GetIssueAsync(id);
+                return Ok(issue);
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // POST: api/Issues
         [HttpPost]
-        public Issue Post([FromBody] Issue value)
+        public async Task<ActionResult<Issue>> CreateIssueAsync([FromBody] Issue value)
         {
-            var created = _issueService.InsertIssue(value);
+            var created = await _issueService.InsertIssueAsync(value);
             return created;
         }
 
         // PUT: api/Issues/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Issue value)
+        public async Task<ActionResult> UpdateIssueAsync(int id, [FromBody] Issue value)
         {
-            _issueService.UpdateIssue(id, value);
+            try
+            {
+                await _issueService.UpdateIssueAsync(id, value);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteIssueAsync(int id)
         {
-            _issueService.DeleteIssue(id);
+            try
+            {
+                await _issueService.DeleteIssueAsync(id);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }
