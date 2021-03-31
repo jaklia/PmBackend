@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Services
 {
@@ -17,18 +20,31 @@ namespace PmBackend.BLL.Services
             _ctx = ctx;
         }
 
-        public void DeleteTimeEntry(int timeEntryId)
+        public async Task DeleteTimeEntryAsync(int timeEntryId)
         {
             _ctx.TimeEntries.Remove(new TimeEntry { Id = timeEntryId });
-            _ctx.SaveChanges();
+            try
+            {
+                await  _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.TimeEntries.FirstOrDefaultAsync(t=> t.Id == timeEntryId) == null)
+                {
+                    throw new EntityNotFoundException("Timeentry not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
+       
 
-        public IEnumerable<TimeEntry> GetTimeEntries()
+        public async Task<IEnumerable<TimeEntry>> GetTimeEntriesAsync()
         {
-            var timeEntries = _ctx.TimeEntries
+            var timeEntries = await _ctx.TimeEntries
                 //.Include(t => t.Issue)
                 //.Include(t=> t.User)
-                .ToList();
+                .ToListAsync();
             return timeEntries;
         }
 
@@ -37,26 +53,41 @@ namespace PmBackend.BLL.Services
         //    return _ctx.TimeEntries.Where(t => t.UserId == userId).ToList();
         //}
 
-        public TimeEntry GetTimeEntry(int timeEntryId)
+        public async Task<TimeEntry> GetTimeEntryAsync(int timeEntryId)
         {
-            return _ctx.TimeEntries
+            return await _ctx.TimeEntries
                 //.Include(t => t.Issue)
-                .SingleOrDefault(t => t.Id == timeEntryId);
+                .SingleOrDefaultAsync(t => t.Id == timeEntryId)
+                ?? throw new EntityNotFoundException("Timeentry not found");
         }
 
-        public TimeEntry InsertTimeEntry(TimeEntry newTimeEntry)
+        public async Task<TimeEntry> InsertTimeEntryAsync(TimeEntry newTimeEntry)
         {
             _ctx.TimeEntries.Add(newTimeEntry);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
             return newTimeEntry;
         }
 
-        public void UpdateTimeEntry(int timeEntryId, TimeEntry updatedTimeEntry)
+        public async Task UpdateTimeEntryAsync(int timeEntryId, TimeEntry updatedTimeEntry)
         {
             updatedTimeEntry.Id = timeEntryId;
             var t = _ctx.Attach(updatedTimeEntry);
             t.State = EntityState.Modified;
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.TimeEntries.FirstOrDefaultAsync(t => t.Id == timeEntryId) == null)
+                {
+                    throw new EntityNotFoundException("Timeentry not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
+
     }
 }

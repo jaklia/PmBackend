@@ -48,6 +48,7 @@ namespace PmBackend.BLL.Services
 
         public async Task<IEnumerable<Issue>> GetProjectIssuesAsync(int projectId)
         {
+            // TODO: throw exception when project not exists
             return await _ctx.Issues.Where(i => i.ProjectId == projectId).ToListAsync();
         }
 

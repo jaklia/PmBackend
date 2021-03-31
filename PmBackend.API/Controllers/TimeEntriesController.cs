@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
@@ -23,38 +24,63 @@ namespace PmBackend.API.Controllers
 
         // GET: api/TimeEntries
         [HttpGet]
-        public IEnumerable<TimeEntry> Get()
+        public async Task<ActionResult<IEnumerable<TimeEntry>>> GetTimeEntriesAsync()
         {
-            return _timeEntryService.GetTimeEntries();
+            var timeentries = await _timeEntryService.GetTimeEntriesAsync();
+            return Ok(timeentries);
         }
 
         // GET: api/TimeEntries/5
         [HttpGet("{id}", Name = "GetTimeEntry")]
-        public TimeEntry Get(int id)
+        public async Task<ActionResult<TimeEntry>> GetTimeEntryAsync(int id)
         {
-            return _timeEntryService.GetTimeEntry(id);
+            try
+            {
+                var timeentry = await _timeEntryService.GetTimeEntryAsync(id);
+                return Ok(timeentry);
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+
         }
 
         // POST: api/TimeEntries
         [HttpPost]
-        public TimeEntry Post([FromBody] TimeEntry value)
+        public async Task<ActionResult<TimeEntry>> CreateTimeEntryAsync([FromBody] TimeEntry value)
         {
-            var created = _timeEntryService.InsertTimeEntry(value);
-            return created;
+            var created = await _timeEntryService.InsertTimeEntryAsync(value);
+            return Ok(created);
         }
 
         // PUT: api/TimeEntries/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] TimeEntry value)
+        public async Task<ActionResult> UpdateTimeEntryAsync(int id, [FromBody] TimeEntry value)
         {
-            _timeEntryService.UpdateTimeEntry(id, value);
+            try
+            {
+                await _timeEntryService.UpdateTimeEntryAsync(id, value);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteTimeEntryAsync(int id)
         {
-            _timeEntryService.DeleteTimeEntry(id);
+            try
+            {
+                await _timeEntryService.DeleteTimeEntryAsync(id);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+
+                return NotFound(e.Message);
+            }
+            
         }
     }
 }
