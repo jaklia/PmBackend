@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
@@ -21,37 +22,60 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Leaves
         [HttpGet]
-        public IEnumerable<Leave> Get()
+        public async Task<ActionResult<IEnumerable<Leave>>> GetLeavesAsync()
         {
-            return _leaveService.GetLeaves();
+            var leaves = await _leaveService.GetLeavesAsync();
+            return Ok(leaves);
         }
 
         // GET: api/Leaves/5
-        [HttpGet("{id}", Name = "GetLeave")]
-        public Leave Get(int leaveId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Leave>> GetLeaveAsync(int id)
         {
-            return _leaveService.GetLeave(leaveId);
+            try
+            {
+                var leave = await _leaveService.GetLeaveAsync(id);
+                return Ok(leave);
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // POST: api/Leaves
         [HttpPost]
-        public Leave Post([FromBody] Leave newLeave)
+        public async Task<ActionResult<Leave>> CreateLeaveAsync([FromBody] Leave newLeave)
         {
-            return _leaveService.InsertLeave(newLeave);
+            var leave = await _leaveService.InsertLeaveAsync(newLeave);
+            return Ok(leave);
         }
 
         // PUT: api/Leaves/5
         [HttpPut("{id}")]
-        public void Put(int leaveId, [FromBody] Leave updatedLeave)
+        public async Task<ActionResult> UpdateLeaveAsync(int id, [FromBody] Leave updatedLeave)
         {
-            _leaveService.UpdateLeave(leaveId, updatedLeave);
+            try
+            {
+                await _leaveService.UpdateLeaveAsync(id, updatedLeave);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int leaveId)
+        public async Task<ActionResult> DeleteLeaveAsync(int id)
         {
-            _leaveService.DeleteLeave(leaveId);
+            try
+            {
+                await _leaveService.DeleteLeaveAsync(id);
+                return Ok();
+            } catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

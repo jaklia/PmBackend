@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
+using YamlDotNet.Serialization.TypeInspectors;
 
 namespace PmBackend.API.Controllers
 {
@@ -21,37 +23,63 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Rooms
         [HttpGet]
-        public IEnumerable<Room> Get()
+        public async Task<ActionResult<IEnumerable<Room>>> GetRoomsAsync()
         {
-            return _roomService.GetRooms();
+            var rooms = await _roomService.GetRoomsAsync();
+            return Ok(rooms);
         }
 
         // GET: api/Rooms/5
-        [HttpGet("{id}", Name = "GetRoom")]
-        public Room Get(int roomId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Room>> GetRoomAsync(int id)
         {
-            return _roomService.GetRoom(roomId);
+            try
+            {
+                var room = await _roomService.GetRoomAsync(id);
+                return Ok(room);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // POST: api/Rooms
         [HttpPost]
-        public Room Post([FromBody] Room newRoom)
+        public async Task<ActionResult<Room>> CreateRoomAsync([FromBody] Room newRoom)
         {
-            return _roomService.InsertRoom(newRoom);
+            var room = await _roomService.InsertRoomAsync(newRoom);
+            return Ok(room);
         }
 
         // PUT: api/Rooms/5
         [HttpPut("{id}")]
-        public void Put(int roomId, [FromBody] Room updatedRoom)
+        public async Task<ActionResult> UpdateRoomAsync(int id, [FromBody] Room updatedRoom)
         {
-            _roomService.UpdateRoom(roomId, updatedRoom);
+            try
+            {
+                await _roomService.UpdateRoomAsync(id, updatedRoom);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int roomId)
+        public async Task<ActionResult> DeleteRoomAsync(int id)
         {
-            _roomService.DeleteRoom(roomId);
+            try
+            {
+                await _roomService.DeleteRoomAsync(id);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

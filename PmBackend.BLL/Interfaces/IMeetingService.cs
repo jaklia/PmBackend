@@ -1,15 +1,16 @@
 ﻿using PmBackend.DAL.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Interfaces
 {
     public interface IMeetingService
     {
-        Meeting GetMeeting(int meetingId);
-        IEnumerable<Meeting> GetMeetings();
+        public Task<Meeting> GetMeetingAsync(int meetingId);
+        public Task<IEnumerable<Meeting>> GetMeetingsAsync();
 
-        Meeting InsertMeeting(Meeting newMeeting);
-        void UpdateMeeting(int meetingId, Meeting updatedMeeting);
-        void DeleteMeeting(int meetingId);
+        public Task<Meeting> InsertMeetingAsync(Meeting newMeeting);
+        public Task UpdateMeetingAsync(int meetingId, Meeting updatedMeeting);
+        public Task DeleteMeetingAsync(int meetingId);
     }
 }

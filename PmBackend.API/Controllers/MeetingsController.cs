@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
 
@@ -21,37 +22,71 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Meetings
         [HttpGet]
-        public IEnumerable<Meeting> Get()
+        public async Task<ActionResult<IEnumerable<Meeting>>> GetMeetingsAsync()
         {
-            return _meetingService.GetMeetings();
+            var meetings = await _meetingService.GetMeetingsAsync();
+            return Ok(meetings);
         }
 
         // GET: api/Meetings/5
         [HttpGet("{id}", Name = "GetMeeting")]
-        public Meeting Get(int meetingId)
+        public async Task<ActionResult<Meeting>> GetMeetingAsync(int id)
         {
-            return _meetingService.GetMeeting(meetingId);
+            try
+            {
+                var meeting = await _meetingService.GetMeetingAsync(id);
+                return Ok(meeting);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         // POST: api/Meetings
         [HttpPost]
-        public Meeting Post([FromBody] Meeting newMeeting)
+        public async Task<ActionResult<Meeting>> CreateMeetingAsync([FromBody] Meeting newMeeting)
         {
-            return _meetingService.InsertMeeting(newMeeting);
+            var meeting = await _meetingService.InsertMeetingAsync(newMeeting);
+            // this puts "/api/meeting/{id}"  in the location header 
+
+            //return Created(
+            //    HttpContext.Request.Path + "/" + meeting.Id.ToString(),
+            //    meeting
+            //);
+            return CreatedAtAction("GetMeeting", new { id = meeting.Id }, meeting);
+
         }
 
         // PUT: api/Meetings/5
         [HttpPut("{id}")]
-        public void Put(int meetingId, [FromBody] Meeting updatedMeeting)
+        public async Task<ActionResult> UpdateMeetingAsync(int id, [FromBody] Meeting updatedMeeting)
         {
-            _meetingService.UpdateMeeting(meetingId, updatedMeeting);
+            try
+            {
+                await _meetingService.UpdateMeetingAsync(id, updatedMeeting);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int meetingId)
+        public async Task<ActionResult> DeleteMeetingAsync(int id)
         {
-            _meetingService.DeleteMeeting(meetingId);
+            try
+            {
+                await _meetingService.DeleteMeetingAsync(id);
+                return Ok();
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

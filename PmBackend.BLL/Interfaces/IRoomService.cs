@@ -1,15 +1,16 @@
 ﻿using PmBackend.DAL.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Interfaces
 {
     public interface IRoomService
     {
-        Room GetRoom(int roomId);
-        IEnumerable<Room> GetRooms();
+        public Task<Room> GetRoomAsync(int roomId);
+        public Task<IEnumerable<Room>> GetRoomsAsync();
 
-        Room InsertRoom(Room newRoom);
-        void UpdateRoom(int roomId, Room updatedRoom);
-        void DeleteRoom(int roomId);
+        public Task<Room> InsertRoomAsync(Room newRoom);
+        public Task UpdateRoomAsync(int roomId, Room updatedRoom);
+        public Task DeleteRoomAsync(int roomId);
     }
 }

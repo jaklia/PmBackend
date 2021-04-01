@@ -1,15 +1,16 @@
 ﻿using PmBackend.DAL.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Interfaces
 {
     public interface ILeaveService
     {
-        Leave GetLeave(int leaveId);
-        IEnumerable<Leave> GetLeaves();
+        public Task<Leave> GetLeaveAsync(int leaveId);
+        public Task<IEnumerable<Leave>> GetLeavesAsync();
 
-        Leave InsertLeave(Leave newLeave);
-        void UpdateLeave(int leaveId, Leave updatedLeave);
-        void DeleteLeave(int leaveId);
+        public Task<Leave> InsertLeaveAsync(Leave newLeave);
+        public Task UpdateLeaveAsync(int leaveId, Leave updatedLeave);
+        public Task DeleteLeaveAsync(int leaveId);
     }
 }

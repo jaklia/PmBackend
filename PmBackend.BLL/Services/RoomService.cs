@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Services
 {
@@ -15,35 +17,62 @@ namespace PmBackend.BLL.Services
         {
             _ctx = ctx;
         }
-        public void DeleteRoom(int roomId)
+        public async Task DeleteRoomAsync(int roomId)
         {
             _ctx.Room.Remove(new Room { Id = roomId });
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Room.FirstOrDefaultAsync(r => r.Id == roomId) == null)
+                {
+                    throw new EntityNotFoundException("Room not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
 
-        public Room GetRoom(int roomId)
+        public async Task<Room> GetRoomAsync(int roomId)
         {
-            return _ctx.Room
-                .SingleOrDefault(r => r.Id == roomId);
+            return await _ctx.Room
+                .SingleOrDefaultAsync(r => r.Id == roomId)
+                ?? throw new EntityNotFoundException("Room not found");
         }
 
-        public IEnumerable<Room> GetRooms()
+        public async Task<IEnumerable<Room>> GetRoomsAsync()
         {
-            return _ctx.Room.ToList();
+            return await _ctx.Room.ToListAsync();
         }
 
-        public Room InsertRoom(Room newRoom)
+        public async Task<Room> InsertRoomAsync(Room newRoom)
         {
             _ctx.Room.Add(newRoom);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
             return newRoom;
         }
 
-        public void UpdateRoom(int roomId, Room updatedRoom)
+        public async Task UpdateRoomAsync(int roomId, Room updatedRoom)
         {
             updatedRoom.Id = roomId;
             var r = _ctx.Attach(updatedRoom);
             r.State = EntityState.Modified;
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Room.FirstOrDefaultAsync(r => r.Id == roomId) == null)
+                {
+                    throw new EntityNotFoundException("Room not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
     }
 }

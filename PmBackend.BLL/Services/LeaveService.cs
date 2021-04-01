@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Services
 {
@@ -16,36 +18,61 @@ namespace PmBackend.BLL.Services
             _ctx = ctx;
         }
 
-        public void DeleteLeave(int leaveId)
+        public async Task DeleteLeaveAsync(int leaveId)
         {
             _ctx.Leave.Remove(new Leave { Id = leaveId });
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) 
+            {
+                if (await _ctx.Leave.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
+                {
+                    throw new EntityNotFoundException("Leave not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
 
-        public Leave GetLeave(int leaveId)
+        public async Task<Leave> GetLeaveAsync(int leaveId)
         {
-            return _ctx.Leave
-                .SingleOrDefault(a => a.Id == leaveId);
+            return await _ctx.Leave
+                .SingleOrDefaultAsync(a => a.Id == leaveId)
+                ?? throw new EntityNotFoundException("Leave not found");
         }
 
-        public IEnumerable<Leave> GetLeaves()
+        public async Task<IEnumerable<Leave>> GetLeavesAsync()
         {
-            return _ctx.Leave.ToList();
+            return await _ctx.Leave.ToListAsync();
         }
 
-        public Leave InsertLeave(Leave newLeave)
+        public async Task<Leave> InsertLeaveAsync(Leave newLeave)
         {
             _ctx.Leave.Add(newLeave);
-            _ctx.SaveChanges();
+            await _ctx.SaveChangesAsync();
             return newLeave;
         }
 
-        public void UpdateLeave(int leaveId, Leave updatedLeave)
+        public async Task UpdateLeaveAsync(int leaveId, Leave updatedLeave)
         {
             updatedLeave.Id = leaveId;
             var leave = _ctx.Attach(updatedLeave);
             leave.State = EntityState.Modified;
-            _ctx.SaveChanges();
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException)
+            {
+                if (await _ctx.Leave.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
+                {
+                    throw new EntityNotFoundException("Leave not found");
+                } else
+                {
+                    throw;
+                }
+            }
         }
     }
 }
