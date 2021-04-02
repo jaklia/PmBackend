@@ -28,19 +28,5 @@ namespace PmBackend.API.DTOs.Issues
             ProjectId = issue.ProjectId;
             ProjectName = issue.Project.Name;
         }
-
-        public Issue ToIssue()
-        {
-            return new Issue
-            {
-                Id = Id,
-                Subject = Subject,
-                Description = Description,
-                StartDate = StartDate,
-                DueDate = DueDate,
-                EstimatedHours = EstimatedHours,
-                ProjectId = ProjectId
-            };
-        }
     }
 }

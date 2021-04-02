@@ -50,7 +50,7 @@ namespace PmBackend.API.Controllers
         [HttpPost]
         public async Task<ActionResult<MeetingDto>> CreateMeetingAsync([FromBody] CreateMeetingDto newMeeting)
         {
-            var m = newMeeting.ToMeetingModel();
+            var m = newMeeting.ToModel();
             var meeting = await _meetingService.InsertMeetingAsync(m);
             // this puts "/api/meeting/{id}"  in the location header 
 
@@ -65,11 +65,11 @@ namespace PmBackend.API.Controllers
 
         // PUT: api/Meetings/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateMeetingAsync(int id, [FromBody] MeetingDto updatedMeeting)
+        public async Task<ActionResult> UpdateMeetingAsync(int id, [FromBody] UpdateMeetingDto updatedMeeting)
         {
             try
             {
-                var m = updatedMeeting.ToMeeting();
+                var m = updatedMeeting.ToModel(id);
                 await _meetingService.UpdateMeetingAsync(id, m);
                 return Ok();
             }

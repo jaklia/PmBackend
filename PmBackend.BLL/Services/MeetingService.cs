@@ -83,26 +83,31 @@ namespace PmBackend.BLL.Services
             return meeting;
         }
 
-        public async Task UpdateMeetingAsync(int meetingId, Meeting updatedMeeting)
+        public async Task UpdateMeetingAsync(int meetingId, UpdateMeetingModel updatedMeeting)
         {
-            updatedMeeting.Id = meetingId;
-            var m = _ctx.Attach(updatedMeeting);
-            m.State = EntityState.Modified;
-            try
+            var meeting = await _ctx.Meetings
+                .Include(m => m.UserMeetings)
+                .Include(m => m.Room)
+                .FirstOrDefaultAsync(m => m.Id == meetingId);
+            meeting.Title = updatedMeeting.Title;
+            meeting.StartDate = updatedMeeting.StartDate;
+            meeting.EndDate = updatedMeeting.EndDate;
+            if (meeting.RoomId != updatedMeeting.RoomId)
             {
-                await _ctx.SaveChangesAsync();
+                meeting.RoomId = updatedMeeting.RoomId;
+                meeting.Room = await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == updatedMeeting.RoomId);
             }
-            catch
-            {
-                if (await _ctx.Meetings.FirstOrDefaultAsync(m => m.Id == meetingId) == null)
-                {
-                    throw new EntityNotFoundException("Meeting not found");
-                }
-                else
-                {
-                    throw;
-                }
-            }
+
+            var toDelete = meeting.UserMeetings.Where(um => !updatedMeeting.UserIds.Contains(um.UserId));
+            var toAdd = updatedMeeting.UserIds
+                .Except(meeting.UserMeetings.Select(um => um.UserId))
+                .Select(userId=> new UserMeeting { 
+                    UserId = userId, 
+                    Meeting = meeting 
+                });
+            _ctx.UserMeetings.RemoveRange(toDelete);
+            _ctx.UserMeetings.AddRange(toAdd);
+            await _ctx.SaveChangesAsync();
         }
     }
 }

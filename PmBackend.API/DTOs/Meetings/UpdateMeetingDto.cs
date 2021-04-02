@@ -1,13 +1,10 @@
-﻿using PmBackend.BLL.Models.Meetings;
-using PmBackend.DAL.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PmBackend.BLL.Models.Meetings;
 
 namespace PmBackend.API.DTOs.Meetings
 {
-    public class CreateMeetingDto
+    public class UpdateMeetingDto
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -16,15 +13,16 @@ namespace PmBackend.API.DTOs.Meetings
         public ICollection<int> UserIds { get; set; }
 
 
-        public CreateMeetingModel ToModel()
+        public UpdateMeetingModel ToModel(int meetingId)
         {
-            return new CreateMeetingModel
+            return new UpdateMeetingModel
             {
+                Id = meetingId, 
                 StartDate = StartDate,
                 EndDate = EndDate,
                 Title = Title,
                 RoomId = RoomId,
-                UserIds =  new List<int> (UserIds)
+                UserIds = new List<int>(UserIds)
             };
         }
     }

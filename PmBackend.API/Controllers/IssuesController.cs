@@ -46,9 +46,9 @@ namespace PmBackend.API.Controllers
 
         // POST: api/Issues
         [HttpPost]
-        public async Task<ActionResult<IssueDto>> CreateIssueAsync([FromBody] IssueDto value)
+        public async Task<ActionResult<IssueDto>> CreateIssueAsync([FromBody] CreateIssueDto value)
         {
-            var issue = value.ToIssue();
+            var issue = value.ToModel();
             var created = await _issueService.InsertIssueAsync(issue);
             var createdDto = new IssueDto(created);
             return createdDto;
@@ -56,11 +56,11 @@ namespace PmBackend.API.Controllers
 
         // PUT: api/Issues/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateIssueAsync(int id, [FromBody] IssueDto value)
+        public async Task<ActionResult> UpdateIssueAsync(int id, [FromBody] UpdateIssueDto value)
         {
             try
             {
-                var issue = value.ToIssue();
+                var issue = value.ToModel(id);
                 await _issueService.UpdateIssueAsync(id, issue);
                 return Ok();
             } catch (EntityNotFoundException e)

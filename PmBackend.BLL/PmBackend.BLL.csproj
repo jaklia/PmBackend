@@ -8,4 +8,8 @@
     <ProjectReference Include="..\PmBackend.DAL\PmBackend.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Projects\" />
+  </ItemGroup>
+
 </Project>

@@ -11,7 +11,7 @@ namespace PmBackend.BLL.Interfaces
         public Task<IEnumerable<Meeting>> GetMeetingsAsync();
 
         public Task<Meeting> InsertMeetingAsync(CreateMeetingModel newMeeting);
-        public Task UpdateMeetingAsync(int meetingId, Meeting updatedMeeting);
+        public Task UpdateMeetingAsync(int meetingId, UpdateMeetingModel updatedMeeting);
         public Task DeleteMeetingAsync(int meetingId);
     }
 }

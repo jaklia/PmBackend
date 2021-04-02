@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.Issues;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -54,32 +55,36 @@ namespace PmBackend.BLL.Services
                 .ToListAsync();
         }
 
-        public async Task<Issue> InsertIssueAsync(Issue newIssue)
+        public async Task<Issue> InsertIssueAsync(CreateIssueModel newIssue)
         {
-            _ctx.Issues.Add(newIssue);
+            var issue = new Issue
+            {
+                StartDate = newIssue.StartDate,
+                DueDate = newIssue.DueDate,
+                Subject = newIssue.Subject,
+                Description = newIssue.Description,
+                EstimatedHours =newIssue.EstimatedHours,
+                ProjectId = newIssue.ProjectId
+            };
+            _ctx.Issues.Add(issue);
             await _ctx.SaveChangesAsync();
-            return newIssue;
+            return issue;
         }
 
-        public async Task UpdateIssueAsync(int issueId, Issue updatedIssue)
+        public async Task UpdateIssueAsync(int issueId, UpdateIssueModel updatedIssue)
         {
-            updatedIssue.Id = issueId;
-            var i = _ctx.Attach(updatedIssue);
-            i.State = EntityState.Modified;
-            try
+            var issue = await _ctx.Issues.FirstOrDefaultAsync(i => i.Id == issueId);
+            if (issue == null)
             {
-                await _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (await _ctx.Issues.FirstOrDefaultAsync(i => i.Id == issueId) == null)
-                {
-                    throw new EntityNotFoundException("Issue not found");
-                }
-                else
-                {
-                    throw;
-                }
+                throw new EntityNotFoundException("Issue not found");
             }
+            issue.ProjectId = updatedIssue.ProjectId;
+            issue.StartDate = updatedIssue.StartDate;
+            issue.DueDate = updatedIssue.DueDate;
+            issue.EstimatedHours = updatedIssue.EstimatedHours;
+            issue.Subject = updatedIssue.Subject;
+            issue.Description = updatedIssue.Description;
+            await _ctx.SaveChangesAsync();
         }
     }
 }

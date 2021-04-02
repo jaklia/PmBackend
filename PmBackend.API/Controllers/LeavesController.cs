@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.API.DTOs.Leaves;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
-using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.Controllers
 {
@@ -22,19 +22,21 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Leaves
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Leave>>> GetLeavesAsync()
+        public async Task<ActionResult<IEnumerable<LeaveDto>>> GetLeavesAsync()
         {
             var leaves = await _leaveService.GetLeavesAsync();
-            return Ok(leaves);
+            var leavesDto = leaves.Select(a => new LeaveDto(a));
+            return Ok(leavesDto);
         }
 
         // GET: api/Leaves/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Leave>> GetLeaveAsync(int id)
+        public async Task<ActionResult<LeaveDto>> GetLeaveAsync(int id)
         {
             try
             {
                 var leave = await _leaveService.GetLeaveAsync(id);
+                var leaveDto = new LeaveDto(leave);
                 return Ok(leave);
             } catch (EntityNotFoundException e)
             {
@@ -44,19 +46,22 @@ namespace PmBackend.API.Controllers
 
         // POST: api/Leaves
         [HttpPost]
-        public async Task<ActionResult<Leave>> CreateLeaveAsync([FromBody] Leave newLeave)
+        public async Task<ActionResult<LeaveDto>> CreateLeaveAsync([FromBody] CreateLeaveDto value)
         {
+            var newLeave = value.ToModel();
             var leave = await _leaveService.InsertLeaveAsync(newLeave);
-            return Ok(leave);
+            var leaveDto = new LeaveDto(leave);
+            return Ok(leaveDto);
         }
 
         // PUT: api/Leaves/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateLeaveAsync(int id, [FromBody] Leave updatedLeave)
+        public async Task<ActionResult> UpdateLeaveAsync(int id, [FromBody] UpdateLeaveDto updatedLeave)
         {
             try
             {
-                await _leaveService.UpdateLeaveAsync(id, updatedLeave);
+                var updatedModel = updatedLeave.ToModel(id);
+                await _leaveService.UpdateLeaveAsync(id, updatedModel);
                 return Ok();
             } catch (EntityNotFoundException e)
             {

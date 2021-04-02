@@ -16,7 +16,8 @@ namespace PmBackend.API.DTOs.Meetings
 
         //public int RoomId { get; set; }
         public RoomDto Room { get; set; }
-      
+        public ICollection<int> UserIds { get; set; }
+
 
         public MeetingDto(Meeting meeting)
         {
@@ -26,18 +27,7 @@ namespace PmBackend.API.DTOs.Meetings
             Title = meeting.Title;
             //RoomId = meeting.RoomId;
             Room = new RoomDto(meeting.Room);
-        }
-
-        public Meeting ToMeeting()
-        {
-            return new Meeting
-            {
-                Id = Id,
-                StartDate = StartDate,
-                EndDate = EndDate,
-                Title = Title,
-                RoomId = Room.Id
-            };
+            UserIds = meeting.UserMeetings.Select(um => um.UserId).ToList();
         }
     }
 }

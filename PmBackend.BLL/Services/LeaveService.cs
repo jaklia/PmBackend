@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.Leaves;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -48,31 +49,50 @@ namespace PmBackend.BLL.Services
             return await _ctx.Leaves.ToListAsync();
         }
 
-        public async Task<Leave> InsertLeaveAsync(Leave newLeave)
+        public async Task<Leave> InsertLeaveAsync(CreateLeaveModel newLeave)
         {
-            _ctx.Leaves.Add(newLeave);
+            var leave = new Leave
+            {
+                Approved = newLeave.Approved,
+                EndDate = newLeave.EndDate,
+                StartDate = newLeave.StartDate,
+                UserId = newLeave.UserId
+            };
+            _ctx.Leaves.Add(leave);
             await _ctx.SaveChangesAsync();
-            return newLeave;
+            return leave;
         }
 
-        public async Task UpdateLeaveAsync(int leaveId, Leave updatedLeave)
+        public async Task UpdateLeaveAsync(int leaveId, UpdateLeaveModel updatedLeave)
         {
-            updatedLeave.Id = leaveId;
-            var leave = _ctx.Attach(updatedLeave);
-            leave.State = EntityState.Modified;
-            try
+            var leave = await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId);
+            if (leave == null)
             {
-                await _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
-                {
-                    throw new EntityNotFoundException("Leave not found");
-                } else
-                {
-                    throw;
-                }
+                throw new EntityNotFoundException("Leave not found");
             }
+            leave.UserId = updatedLeave.UserId;
+            leave.StartDate = updatedLeave.StartDate;
+            leave.EndDate = updatedLeave.EndDate;
+            leave.Approved = updatedLeave.Approved;
+            await _ctx.SaveChangesAsync();
+
+
+            //updatedLeave.Id = leaveId;
+            //var leave = _ctx.Attach(updatedLeave);
+            //leave.State = EntityState.Modified;
+            //try
+            //{
+            //    await _ctx.SaveChangesAsync();
+            //} catch (DbUpdateConcurrencyException)
+            //{
+            //    if (await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
+            //    {
+            //        throw new EntityNotFoundException("Leave not found");
+            //    } else
+            //    {
+            //        throw;
+            //    }
+            //}
         }
     }
 }
