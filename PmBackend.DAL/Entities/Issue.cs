@@ -17,7 +17,7 @@ namespace PmBackend.DAL.Entities
         public int ProjectId { get; set; }
         public Project Project { get; set; }
 
-        public IEnumerable<TimeEntry> timeEntries { get; }
+        public ICollection<TimeEntry> TimeEntries { get; } = new List<TimeEntry>();
 
         // status
         // priority

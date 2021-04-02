@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PmBackend.API.DTOs.TimeEntries;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
-using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.Controllers
 {
@@ -24,20 +22,22 @@ namespace PmBackend.API.Controllers
 
         // GET: api/TimeEntries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TimeEntry>>> GetTimeEntriesAsync()
+        public async Task<ActionResult<IEnumerable<TimeEntryDto>>> GetTimeEntriesAsync()
         {
             var timeentries = await _timeEntryService.GetTimeEntriesAsync();
-            return Ok(timeentries);
+            var timeentriesDto = timeentries.Select(t => new TimeEntryDto(t));
+            return Ok(timeentriesDto);
         }
 
         // GET: api/TimeEntries/5
         [HttpGet("{id}", Name = "GetTimeEntry")]
-        public async Task<ActionResult<TimeEntry>> GetTimeEntryAsync(int id)
+        public async Task<ActionResult<TimeEntryDto>> GetTimeEntryAsync(int id)
         {
             try
             {
                 var timeentry = await _timeEntryService.GetTimeEntryAsync(id);
-                return Ok(timeentry);
+                var timeEntryDto = new TimeEntryDto(timeentry);
+                return Ok(timeEntryDto);
             } catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
@@ -47,19 +47,22 @@ namespace PmBackend.API.Controllers
 
         // POST: api/TimeEntries
         [HttpPost]
-        public async Task<ActionResult<TimeEntry>> CreateTimeEntryAsync([FromBody] TimeEntry value)
+        public async Task<ActionResult<TimeEntryDto>> CreateTimeEntryAsync([FromBody] TimeEntryDto value)
         {
-            var created = await _timeEntryService.InsertTimeEntryAsync(value);
-            return Ok(created);
+            var t = value.ToTimeEntry();
+            var created = await _timeEntryService.InsertTimeEntryAsync(t);
+            var createdDto = new TimeEntryDto(created);
+            return Ok(createdDto);
         }
 
         // PUT: api/TimeEntries/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTimeEntryAsync(int id, [FromBody] TimeEntry value)
+        public async Task<ActionResult> UpdateTimeEntryAsync(int id, [FromBody] TimeEntryDto value)
         {
             try
             {
-                await _timeEntryService.UpdateTimeEntryAsync(id, value);
+                var t = value.ToTimeEntry();
+                await _timeEntryService.UpdateTimeEntryAsync(id, t);
                 return Ok();
             } catch (EntityNotFoundException e)
             {

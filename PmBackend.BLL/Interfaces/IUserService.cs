@@ -2,18 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PmBackend.BLL.Interfaces
 {
     public interface IUserService
     {
-        User GetUser(int userId);
-        IEnumerable<User> GetUsers();
+        Task<User> GetUserAsync(int userId);
+        Task<IEnumerable<User>> GetUsersAsync();
 
-        IEnumerable<TimeEntry> GetUserTimeEntries(int userId);
+        Task<IEnumerable<TimeEntry>> GetUserTimeEntriesAsync(int userId);
 
-        User InsertUser(User newUser);
-        void UpdateUser(int userId, User UpdatedUser);
-        void DeleteUser(int userId);
+        Task<User> InsertUserAsync(User newUser);
+        Task UpdateUserAsync(int userId, User UpdatedUser);
+        Task DeleteUserAsync(int userId);
     }
 }

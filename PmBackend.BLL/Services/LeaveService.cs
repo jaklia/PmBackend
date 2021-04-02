@@ -20,13 +20,13 @@ namespace PmBackend.BLL.Services
 
         public async Task DeleteLeaveAsync(int leaveId)
         {
-            _ctx.Leave.Remove(new Leave { Id = leaveId });
+            _ctx.Leaves.Remove(new Leave { Id = leaveId });
             try
             {
                 await _ctx.SaveChangesAsync();
             } catch (DbUpdateConcurrencyException) 
             {
-                if (await _ctx.Leave.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
+                if (await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
                 {
                     throw new EntityNotFoundException("Leave not found");
                 } else
@@ -38,19 +38,19 @@ namespace PmBackend.BLL.Services
 
         public async Task<Leave> GetLeaveAsync(int leaveId)
         {
-            return await _ctx.Leave
+            return await _ctx.Leaves
                 .SingleOrDefaultAsync(a => a.Id == leaveId)
                 ?? throw new EntityNotFoundException("Leave not found");
         }
 
         public async Task<IEnumerable<Leave>> GetLeavesAsync()
         {
-            return await _ctx.Leave.ToListAsync();
+            return await _ctx.Leaves.ToListAsync();
         }
 
         public async Task<Leave> InsertLeaveAsync(Leave newLeave)
         {
-            _ctx.Leave.Add(newLeave);
+            _ctx.Leaves.Add(newLeave);
             await _ctx.SaveChangesAsync();
             return newLeave;
         }
@@ -65,7 +65,7 @@ namespace PmBackend.BLL.Services
                 await _ctx.SaveChangesAsync();
             } catch (DbUpdateConcurrencyException)
             {
-                if (await _ctx.Leave.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
+                if (await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
                 {
                     throw new EntityNotFoundException("Leave not found");
                 } else

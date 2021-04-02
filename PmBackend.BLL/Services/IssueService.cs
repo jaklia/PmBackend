@@ -40,14 +40,18 @@ namespace PmBackend.BLL.Services
         public async Task<Issue> GetIssueAsync(int issueId)
         {
             return await _ctx.Issues
-                //  .Include(i => i.Project)
+                .Include(i => i.Project)
+                .Include(i => i.TimeEntries)
                 .SingleOrDefaultAsync(i => i.Id == issueId)
                 ?? throw new EntityNotFoundException("Issue not found");
         }
        
         public async Task<IEnumerable<Issue>> GetIssuesAsync()
         {
-            return await _ctx.Issues.ToListAsync();
+            return await _ctx.Issues
+                .Include(i => i.Project)
+                .Include(i => i.TimeEntries)
+                .ToListAsync();
         }
 
         public async Task<Issue> InsertIssueAsync(Issue newIssue)

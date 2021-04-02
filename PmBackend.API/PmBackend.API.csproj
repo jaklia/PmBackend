@@ -23,5 +23,9 @@
     <ProjectReference Include="..\PmBackend.BLL\PmBackend.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Leaves\" />
+  </ItemGroup>
+
 
 </Project>

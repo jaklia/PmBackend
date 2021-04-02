@@ -42,8 +42,8 @@ namespace PmBackend.BLL.Services
         public async Task<IEnumerable<TimeEntry>> GetTimeEntriesAsync()
         {
             var timeEntries = await _ctx.TimeEntries
-                //.Include(t => t.Issue)
-                //.Include(t=> t.User)
+                .Include(t => t.Issue)
+                .Include(t=> t.User)
                 .ToListAsync();
             return timeEntries;
         }
@@ -56,7 +56,8 @@ namespace PmBackend.BLL.Services
         public async Task<TimeEntry> GetTimeEntryAsync(int timeEntryId)
         {
             return await _ctx.TimeEntries
-                //.Include(t => t.Issue)
+                .Include(t => t.Issue)
+                .Include(t => t.User)
                 .SingleOrDefaultAsync(t => t.Id == timeEntryId)
                 ?? throw new EntityNotFoundException("Timeentry not found");
         }

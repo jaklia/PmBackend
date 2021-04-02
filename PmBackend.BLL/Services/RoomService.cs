@@ -19,13 +19,13 @@ namespace PmBackend.BLL.Services
         }
         public async Task DeleteRoomAsync(int roomId)
         {
-            _ctx.Room.Remove(new Room { Id = roomId });
+            _ctx.Rooms.Remove(new Room { Id = roomId });
             try
             {
                 await _ctx.SaveChangesAsync();
             } catch (DbUpdateConcurrencyException)
             {
-                if (await _ctx.Room.FirstOrDefaultAsync(r => r.Id == roomId) == null)
+                if (await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == roomId) == null)
                 {
                     throw new EntityNotFoundException("Room not found");
                 } else
@@ -37,19 +37,19 @@ namespace PmBackend.BLL.Services
 
         public async Task<Room> GetRoomAsync(int roomId)
         {
-            return await _ctx.Room
+            return await _ctx.Rooms
                 .SingleOrDefaultAsync(r => r.Id == roomId)
                 ?? throw new EntityNotFoundException("Room not found");
         }
 
         public async Task<IEnumerable<Room>> GetRoomsAsync()
         {
-            return await _ctx.Room.ToListAsync();
+            return await _ctx.Rooms.ToListAsync();
         }
 
         public async Task<Room> InsertRoomAsync(Room newRoom)
         {
-            _ctx.Room.Add(newRoom);
+            _ctx.Rooms.Add(newRoom);
             await _ctx.SaveChangesAsync();
             return newRoom;
         }
@@ -64,7 +64,7 @@ namespace PmBackend.BLL.Services
                 await _ctx.SaveChangesAsync();
             } catch (DbUpdateConcurrencyException)
             {
-                if (await _ctx.Room.FirstOrDefaultAsync(r => r.Id == roomId) == null)
+                if (await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == roomId) == null)
                 {
                     throw new EntityNotFoundException("Room not found");
                 }

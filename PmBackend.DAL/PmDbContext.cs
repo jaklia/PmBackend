@@ -28,14 +28,20 @@ namespace PmBackend.DAL
         public DbSet<Issue> Issues { get; set;  }
         public DbSet<Project> Projects { get; set; }
         public DbSet<TimeEntry> TimeEntries { get; set; }
-        public DbSet<Room> Room { get; set; }
-        public DbSet<Meeting> Meeting { get; set; }
-        public DbSet<Leave> Leave { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
+        public DbSet<Leave> Leaves { get; set; }
+        public DbSet<UserMeeting> UserMeetings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().ToTable("Users");
+            // for some reason these below won't get pluralized
+            modelBuilder.Entity<Room>().ToTable("Rooms");
+            modelBuilder.Entity<Leave>().ToTable("Leaves");
+            modelBuilder.Entity<Meeting>().ToTable("Meetings");
+            modelBuilder.Entity<UserMeeting>().ToTable("UserMeetings");
 
             // Constraints
             modelBuilder.Entity<Issue>()

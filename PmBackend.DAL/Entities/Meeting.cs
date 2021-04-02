@@ -14,8 +14,10 @@ namespace PmBackend.DAL.Entities
         //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         //public int DurationMinutes { get; set; }
 
+        public string Title { get; set; }
+
         public int RoomId { get; set; }
         public Room Room { get; set; }
-        public IEnumerable<UserMeeting> UserMeetings { get; set; }
+        public ICollection<UserMeeting> UserMeetings { get; } = new List<UserMeeting>();
     }
 }

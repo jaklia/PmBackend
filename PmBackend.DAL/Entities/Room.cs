@@ -11,6 +11,6 @@ namespace PmBackend.DAL.Entities
         public int Capacity { get; set; }
 
 
-        public IEnumerable<Meeting> Meetings { get; set; }
+        public ICollection<Meeting> Meetings { get; } = new List<Meeting>();
 }
 }

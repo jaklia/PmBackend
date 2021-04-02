@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using PmBackend.API.DTOs.TimeEntries;
+using PmBackend.API.DTOs.Users;
 using PmBackend.BLL.Common;
 using PmBackend.BLL.Interfaces;
 using PmBackend.DAL.Entities;
@@ -26,46 +28,59 @@ namespace PmBackend.API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<User> Get()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
             var user = User; // User prop from ControllerBase (to check claims)
-            return _userService.GetUsers();
+            var users = await _userService.GetUsersAsync();
+            var usersDto = users.Select(u => new UserDto(u));
+            return Ok(usersDto);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}", Name = "GetUser")]
-        public User Get(int id)
+        public async Task<ActionResult<UserDto>> GetUserAsync(int id)
         {
-            return _userService.GetUser(id);
+            try
+            {
+                var user = await _userService.GetUserAsync(id);
+                return Ok(new UserDto(user));
+            } catch 
+            {
+                return NotFound();
+            }
         }
 
         
         [HttpGet("{id}/timeentries", Name = "GetUserTimeEntries")]
-        public IEnumerable<TimeEntry> GetUserTimeEntries(int id)
+        public async Task<ActionResult<IEnumerable<TimeEntryDto>>> GetUserTimeEntries(int id)
         {
-            return _userService.GetUserTimeEntries(id);
+            var timeEntries = await _userService.GetUserTimeEntriesAsync(id);
+            return Ok(timeEntries.Select(t => new TimeEntryDto(t)));
         }
 
         // POST: api/Users
         [HttpPost]
-        public User Post([FromBody] User value)
+        public async Task<ActionResult<UserDto>> CreateUserAsync([FromBody] User value)
         {
-            var created = _userService.InsertUser(value);
-            return created;
+            var created = await _userService.InsertUserAsync(value);
+            var createdDto = new UserDto(created);
+            return Ok(createdDto);
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] User value)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] User value)
         {
-            _userService.UpdateUser(id, value);
+            await _userService.UpdateUserAsync(id, value);
+            return Ok();
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            _userService.DeleteUser(id);
+            await _userService.DeleteUserAsync(id);
+            return Ok();
         }
     }
 }

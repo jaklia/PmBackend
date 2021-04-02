@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.Meetings;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -20,16 +21,18 @@ namespace PmBackend.BLL.Services
         }
         public async Task DeleteMeetingAsync(int meetingId)
         {
-            _ctx.Meeting.Remove(new Meeting { Id = meetingId });
+            _ctx.Meetings.Remove(new Meeting { Id = meetingId });
             try
             {
                 await _ctx.SaveChangesAsync();
-            } catch
+            }
+            catch
             {
-                if (await _ctx.Meeting.FirstOrDefaultAsync(m => m.Id == meetingId) == null)
+                if (await _ctx.Meetings.FirstOrDefaultAsync(m => m.Id == meetingId) == null)
                 {
                     throw new EntityNotFoundException("Meeting not found");
-                } else
+                }
+                else
                 {
                     throw;
                 }
@@ -38,22 +41,46 @@ namespace PmBackend.BLL.Services
 
         public async Task<Meeting> GetMeetingAsync(int meetingId)
         {
-            return await _ctx.Meeting
+            return await _ctx.Meetings
+                .Include(m => m.Room)
+                .Include(m => m.UserMeetings)
                 .SingleOrDefaultAsync(m => m.Id == meetingId)
                 ?? throw new EntityNotFoundException("Meeting not found");
         }
 
         public async Task<IEnumerable<Meeting>> GetMeetingsAsync()
         {
-            return await _ctx.Meeting.ToListAsync();
+            return await _ctx.Meetings
+                .Include(m => m.Room)
+                .Include(m => m.UserMeetings)
+                .ToListAsync();
         }
 
-        public async Task<Meeting> InsertMeetingAsync(Meeting newMeeting)
+        public async Task<Meeting> InsertMeetingAsync(CreateMeetingModel newMeeting)
         {
-           
-            _ctx.Meeting.Add(newMeeting);
+            // this is working  
+            // TODO:  other endpoints, separate models in each layer (create/updateModel, + dtos)
+            var meeting = new Meeting
+            {
+                Title = newMeeting.Title,
+                StartDate = newMeeting.StartDate,
+                EndDate = newMeeting.EndDate,
+                RoomId = newMeeting.RoomId
+            };
+            _ctx.Meetings.Add(meeting);
+            meeting.Room = await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == newMeeting.RoomId);
+            foreach (var userId in newMeeting.UserIds)
+            {
+                _ctx.UserMeetings.Add(
+                    new UserMeeting
+                    {
+                        Meeting = meeting,
+                        UserId = userId
+                    }
+                );
+            }
             await _ctx.SaveChangesAsync();
-            return newMeeting;
+            return meeting;
         }
 
         public async Task UpdateMeetingAsync(int meetingId, Meeting updatedMeeting)
@@ -67,7 +94,7 @@ namespace PmBackend.BLL.Services
             }
             catch
             {
-                if (await _ctx.Meeting.FirstOrDefaultAsync(m => m.Id == meetingId) == null)
+                if (await _ctx.Meetings.FirstOrDefaultAsync(m => m.Id == meetingId) == null)
                 {
                     throw new EntityNotFoundException("Meeting not found");
                 }

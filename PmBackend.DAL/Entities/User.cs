@@ -8,11 +8,11 @@ namespace PmBackend.DAL.Entities
     public class User : IdentityUser<int>
     {
 
-       
-        public IEnumerable<TimeEntry> TimeEntries { get; set; }
 
-        public IEnumerable<UserMeeting> UserMeetings { get; set; }
-        public IEnumerable<Leave> Leaves { get; set; }
+        public ICollection<TimeEntry> TimeEntries { get; } = new List<TimeEntry>();
+
+        public ICollection<UserMeeting> UserMeetings { get; } = new List<UserMeeting>();
+        public ICollection<Leave> Leaves { get; } = new List<Leave>();
         
     }
 }

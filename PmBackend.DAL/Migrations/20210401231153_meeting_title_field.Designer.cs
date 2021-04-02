@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PmBackend.DAL;
 
 namespace PmBackend.DAL.Migrations
 {
     [DbContext(typeof(PmDbContext))]
-    partial class PmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210401231153_meeting_title_field")]
+    partial class meeting_title_field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +53,13 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "5296e506-9091-40a3-8989-1ec1c16a796e",
+                            ConcurrencyStamp = "61d4f7c8-df87-4954-b97e-7170bbe796bc",
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "1e0e9ae6-adfd-4952-8016-7d5bcfc550d1",
+                            ConcurrencyStamp = "655fcc8c-f11c-43b8-8b09-3268f87066c7",
                             Name = "User"
                         });
                 });
@@ -261,7 +263,7 @@ namespace PmBackend.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Leaves");
+                    b.ToTable("Leave");
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.Meeting", b =>
@@ -287,7 +289,7 @@ namespace PmBackend.DAL.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Meetings");
+                    b.ToTable("Meeting");
                 });
 
             modelBuilder.Entity("PmBackend.DAL.Entities.Project", b =>
@@ -336,7 +338,7 @@ namespace PmBackend.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Room");
 
                     b.HasData(
                         new
@@ -375,7 +377,7 @@ namespace PmBackend.DAL.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 4, 2, 4, 42, 22, 19, DateTimeKind.Local).AddTicks(7881));
+                        .HasDefaultValue(new DateTime(2021, 4, 2, 1, 11, 52, 325, DateTimeKind.Local).AddTicks(7208));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -402,7 +404,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2021, 4, 2, 4, 42, 22, 41, DateTimeKind.Local).AddTicks(9891),
+                            Date = new DateTime(2021, 4, 2, 1, 11, 52, 349, DateTimeKind.Local).AddTicks(3484),
                             Description = "Write specification",
                             IssueId = 1,
                             Minutes = 120,
@@ -411,7 +413,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2021, 4, 2, 4, 42, 22, 42, DateTimeKind.Local).AddTicks(2701),
+                            Date = new DateTime(2021, 4, 2, 1, 11, 52, 349, DateTimeKind.Local).AddTicks(6107),
                             Description = "init project, base navigation system",
                             IssueId = 1,
                             Minutes = 300,
@@ -420,7 +422,7 @@ namespace PmBackend.DAL.Migrations
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2021, 4, 2, 4, 42, 22, 42, DateTimeKind.Local).AddTicks(2810),
+                            Date = new DateTime(2021, 4, 2, 1, 11, 52, 349, DateTimeKind.Local).AddTicks(6215),
                             Description = "API research",
                             IssueId = 2,
                             Minutes = 600,
@@ -499,14 +501,14 @@ namespace PmBackend.DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "96fa8feb-58be-4881-a30e-570d57f150cb",
+                            ConcurrencyStamp = "67d67d5b-0750-4f67-acf9-e2eb97e3a8dd",
                             Email = "user@teszt.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@TESZT.COM",
                             PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2a88ea9b-9f71-4c51-8dc2-a62ec1c6c7c9",
+                            SecurityStamp = "8d098873-c906-44f3-b4c6-51940e8d044e",
                             TwoFactorEnabled = false,
                             UserName = "Teszt Elek"
                         },
@@ -514,14 +516,14 @@ namespace PmBackend.DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fc761afd-6eac-476b-9a24-06be27def2f5",
+                            ConcurrencyStamp = "5de07873-c692-4d7c-9f70-3ab0fa9be2d7",
                             Email = "bela@pelda.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "BELA@PELDA.COM",
                             PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e902148b-6326-425b-aa57-2dccf6ab88ae",
+                            SecurityStamp = "eab7aa63-aaba-4f20-8d23-34333842ca7f",
                             TwoFactorEnabled = false,
                             UserName = "Példa Béla"
                         },
@@ -529,14 +531,14 @@ namespace PmBackend.DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dcefe3f3-0813-4c9f-ab4d-1b9ed39cde69",
+                            ConcurrencyStamp = "24d4227a-30e5-4482-9662-7d6e58c70f9d",
                             Email = "admin@teszt.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@TESZT.COM",
                             PasswordHash = "AQAAAAEAACcQAAAAEEvzg8nUYRh8AC1LsDDmc1c86tcRLpPwGikngu5mPfhkyy3VWI8BWoBYGNMNEKJQbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f715d865-23f5-4bc5-9e4c-ac718de41549",
+                            SecurityStamp = "5a7f6774-3e93-41c0-bb50-0214e582405a",
                             TwoFactorEnabled = false,
                             UserName = "Teszt Admin"
                         });
@@ -561,7 +563,7 @@ namespace PmBackend.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserMeetings");
+                    b.ToTable("UserMeeting");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -645,7 +647,7 @@ namespace PmBackend.DAL.Migrations
             modelBuilder.Entity("PmBackend.DAL.Entities.TimeEntry", b =>
                 {
                     b.HasOne("PmBackend.DAL.Entities.Issue", "Issue")
-                        .WithMany("TimeEntries")
+                        .WithMany("timeEntries")
                         .HasForeignKey("IssueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
