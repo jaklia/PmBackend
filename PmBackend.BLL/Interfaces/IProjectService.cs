@@ -1,4 +1,5 @@
-﻿using PmBackend.DAL.Entities;
+﻿using PmBackend.BLL.Models.Projects;
+using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +15,8 @@ namespace PmBackend.BLL.Interfaces
 
         public Task<IEnumerable<Issue>> GetProjectIssuesAsync(int projectId);
 
-        public Task<Project> InsertProjectAsync(Project newProject);
-        public Task UpdateProjectAsync(int projectId, Project updatedProject);
+        public Task<Project> InsertProjectAsync(CreateProjectModel newProject);
+        public Task UpdateProjectAsync(int projectId, UpdateProjectModel updatedProject);
         public Task DeleteProjectAsync(int projectId);
         
     }

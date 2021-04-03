@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.Rooms;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -47,32 +48,30 @@ namespace PmBackend.BLL.Services
             return await _ctx.Rooms.ToListAsync();
         }
 
-        public async Task<Room> InsertRoomAsync(Room newRoom)
+        public async Task<Room> InsertRoomAsync(CreateRoomModel newRoom)
         {
-            _ctx.Rooms.Add(newRoom);
+            var room = new Room
+            {
+                Name = newRoom.Name,
+                Capacity  = newRoom.Capacity
+            };
+            _ctx.Rooms.Add(room);
             await _ctx.SaveChangesAsync();
-            return newRoom;
+            return room;
         }
 
-        public async Task UpdateRoomAsync(int roomId, Room updatedRoom)
+        public async Task UpdateRoomAsync(int roomId, UpdateRoomModel updatedRoom)
         {
-            updatedRoom.Id = roomId;
-            var r = _ctx.Attach(updatedRoom);
-            r.State = EntityState.Modified;
-            try
+            var room = await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
+            if (room == null)
             {
-                await _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (await _ctx.Rooms.FirstOrDefaultAsync(r => r.Id == roomId) == null)
-                {
-                    throw new EntityNotFoundException("Room not found");
-                }
-                else
-                {
-                    throw;
-                }
+                throw new EntityNotFoundException("Room not found");
             }
+            room.Name = updatedRoom.Name;
+            room.Capacity = updatedRoom.Capacity;
+            await _ctx.SaveChangesAsync();
+
+           
         }
     }
 }

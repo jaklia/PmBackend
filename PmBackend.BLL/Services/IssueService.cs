@@ -66,6 +66,7 @@ namespace PmBackend.BLL.Services
                 EstimatedHours =newIssue.EstimatedHours,
                 ProjectId = newIssue.ProjectId
             };
+            issue.Project = await _ctx.Projects.FirstOrDefaultAsync(p => p.Id == issue.ProjectId);
             _ctx.Issues.Add(issue);
             await _ctx.SaveChangesAsync();
             return issue;
@@ -73,7 +74,9 @@ namespace PmBackend.BLL.Services
 
         public async Task UpdateIssueAsync(int issueId, UpdateIssueModel updatedIssue)
         {
-            var issue = await _ctx.Issues.FirstOrDefaultAsync(i => i.Id == issueId);
+            var issue = await _ctx.Issues
+                .Include(i => i.Project)
+                .FirstOrDefaultAsync(i => i.Id == issueId);
             if (issue == null)
             {
                 throw new EntityNotFoundException("Issue not found");

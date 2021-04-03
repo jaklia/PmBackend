@@ -75,24 +75,6 @@ namespace PmBackend.BLL.Services
             leave.EndDate = updatedLeave.EndDate;
             leave.Approved = updatedLeave.Approved;
             await _ctx.SaveChangesAsync();
-
-
-            //updatedLeave.Id = leaveId;
-            //var leave = _ctx.Attach(updatedLeave);
-            //leave.State = EntityState.Modified;
-            //try
-            //{
-            //    await _ctx.SaveChangesAsync();
-            //} catch (DbUpdateConcurrencyException)
-            //{
-            //    if (await _ctx.Leaves.FirstOrDefaultAsync(a => a.Id == leaveId) == null)
-            //    {
-            //        throw new EntityNotFoundException("Leave not found");
-            //    } else
-            //    {
-            //        throw;
-            //    }
-            //}
         }
     }
 }

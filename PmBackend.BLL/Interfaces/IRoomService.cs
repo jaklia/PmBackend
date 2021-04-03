@@ -1,4 +1,5 @@
-﻿using PmBackend.DAL.Entities;
+﻿using PmBackend.BLL.Models.Rooms;
+using PmBackend.DAL.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace PmBackend.BLL.Interfaces
         public Task<Room> GetRoomAsync(int roomId);
         public Task<IEnumerable<Room>> GetRoomsAsync();
 
-        public Task<Room> InsertRoomAsync(Room newRoom);
-        public Task UpdateRoomAsync(int roomId, Room updatedRoom);
+        public Task<Room> InsertRoomAsync(CreateRoomModel newRoom);
+        public Task UpdateRoomAsync(int roomId, UpdateRoomModel updatedRoom);
         public Task DeleteRoomAsync(int roomId);
     }
 }

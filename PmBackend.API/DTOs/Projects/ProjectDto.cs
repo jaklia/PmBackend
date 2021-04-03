@@ -21,14 +21,6 @@ namespace PmBackend.API.DTOs.Projects
             IssueCount = p.Issues.Count;
         }
 
-        public Project ToProject()
-        {
-            return new Project
-            {
-                Id = Id,
-                Name = Name,
-                Description = Description
-            };
-        }
+    
     }
 }

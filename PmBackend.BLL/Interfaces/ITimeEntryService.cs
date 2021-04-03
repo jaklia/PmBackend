@@ -1,4 +1,5 @@
-﻿using PmBackend.DAL.Entities;
+﻿using PmBackend.BLL.Models.TimeEntries;
+using PmBackend.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,8 +15,8 @@ namespace PmBackend.BLL.Interfaces
        // IEnumerable<TimeEntry> GetTimeEntriesForUser(int userId);
 
 
-        public Task<TimeEntry> InsertTimeEntryAsync(TimeEntry newTimeEntry);
-        public Task UpdateTimeEntryAsync(int timeEntryId, TimeEntry updatedTimeEntry);
+        public Task<TimeEntry> InsertTimeEntryAsync(CreateTimeEntryModel newTimeEntry);
+        public Task UpdateTimeEntryAsync(int timeEntryId, UpdateTimeEntryModel updatedTimeEntry);
         public Task DeleteTimeEntryAsync(int timeEntryId);
 
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.TimeEntries;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -16,7 +17,8 @@ namespace PmBackend.BLL.Services
     public class TimeEntryService : ITimeEntryService
     {
         private readonly PmDbContext _ctx;
-        public TimeEntryService(PmDbContext ctx) {
+        public TimeEntryService(PmDbContext ctx)
+        {
             _ctx = ctx;
         }
 
@@ -25,25 +27,27 @@ namespace PmBackend.BLL.Services
             _ctx.TimeEntries.Remove(new TimeEntry { Id = timeEntryId });
             try
             {
-                await  _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
+                await _ctx.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
             {
-                if (await _ctx.TimeEntries.FirstOrDefaultAsync(t=> t.Id == timeEntryId) == null)
+                if (await _ctx.TimeEntries.FirstOrDefaultAsync(t => t.Id == timeEntryId) == null)
                 {
                     throw new EntityNotFoundException("Timeentry not found");
-                } else
+                }
+                else
                 {
                     throw;
                 }
             }
         }
-       
+
 
         public async Task<IEnumerable<TimeEntry>> GetTimeEntriesAsync()
         {
             var timeEntries = await _ctx.TimeEntries
                 .Include(t => t.Issue)
-                .Include(t=> t.User)
+                .Include(t => t.User)
                 .ToListAsync();
             return timeEntries;
         }
@@ -62,32 +66,49 @@ namespace PmBackend.BLL.Services
                 ?? throw new EntityNotFoundException("Timeentry not found");
         }
 
-        public async Task<TimeEntry> InsertTimeEntryAsync(TimeEntry newTimeEntry)
+        public async Task<TimeEntry> InsertTimeEntryAsync(CreateTimeEntryModel newTimeEntry)
         {
-            _ctx.TimeEntries.Add(newTimeEntry);
+            var timeEntry = new TimeEntry
+            {
+                Date = newTimeEntry.Date,
+                Minutes = newTimeEntry.Minutes,
+                Description = newTimeEntry.Description,
+                IssueId = newTimeEntry.IssueId,
+                UserId = newTimeEntry.UserId
+            };
+            timeEntry.Issue = await _ctx.Issues.FirstOrDefaultAsync(u => u.Id == newTimeEntry.IssueId);
+            timeEntry.User = await _ctx.Users.FirstOrDefaultAsync(u => u.Id == newTimeEntry.UserId);
+
+            _ctx.TimeEntries.Add(timeEntry);
             await _ctx.SaveChangesAsync();
-            return newTimeEntry;
+            return timeEntry;
         }
 
-        public async Task UpdateTimeEntryAsync(int timeEntryId, TimeEntry updatedTimeEntry)
+        public async Task UpdateTimeEntryAsync(int timeEntryId, UpdateTimeEntryModel updatedTimeEntry)
         {
-            updatedTimeEntry.Id = timeEntryId;
-            var t = _ctx.Attach(updatedTimeEntry);
-            t.State = EntityState.Modified;
-            try
+            var timeEntry = await _ctx.TimeEntries
+                .Include(t => t.User)
+                .Include(t => t.Issue)
+                .FirstOrDefaultAsync(t => t.Id == timeEntryId);
+            if (timeEntry == null)
             {
-                await _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (await _ctx.TimeEntries.FirstOrDefaultAsync(t => t.Id == timeEntryId) == null)
-                {
-                    throw new EntityNotFoundException("Timeentry not found");
-                }
-                else
-                {
-                    throw;
-                }
+                throw new EntityNotFoundException("Timeentry not found");
             }
+            timeEntry.Date = updatedTimeEntry.Date;
+            timeEntry.Minutes = updatedTimeEntry.Minutes;
+            timeEntry.Description = updatedTimeEntry.Description;
+
+            if (timeEntry.IssueId != updatedTimeEntry.IssueId)
+            {
+                timeEntry.IssueId = updatedTimeEntry.IssueId;
+                timeEntry.Issue = await _ctx.Issues.FirstOrDefaultAsync(u => u.Id == updatedTimeEntry.IssueId);
+            }
+            if (timeEntry.UserId != updatedTimeEntry.UserId)
+            {
+                timeEntry.UserId = updatedTimeEntry.UserId;
+                timeEntry.User = await _ctx.Users.FirstOrDefaultAsync(u => u.Id == updatedTimeEntry.UserId);
+             }
+            await _ctx.SaveChangesAsync();
         }
 
     }

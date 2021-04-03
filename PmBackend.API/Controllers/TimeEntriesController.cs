@@ -47,9 +47,9 @@ namespace PmBackend.API.Controllers
 
         // POST: api/TimeEntries
         [HttpPost]
-        public async Task<ActionResult<TimeEntryDto>> CreateTimeEntryAsync([FromBody] TimeEntryDto value)
+        public async Task<ActionResult<TimeEntryDto>> CreateTimeEntryAsync([FromBody] CreateTimeEntryDto value)
         {
-            var t = value.ToTimeEntry();
+            var t = value.ToModel();
             var created = await _timeEntryService.InsertTimeEntryAsync(t);
             var createdDto = new TimeEntryDto(created);
             return Ok(createdDto);
@@ -57,11 +57,11 @@ namespace PmBackend.API.Controllers
 
         // PUT: api/TimeEntries/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTimeEntryAsync(int id, [FromBody] TimeEntryDto value)
+        public async Task<ActionResult> UpdateTimeEntryAsync(int id, [FromBody] UpdateTimeEntryDto value)
         {
             try
             {
-                var t = value.ToTimeEntry();
+                var t = value.ToModel(id);
                 await _timeEntryService.UpdateTimeEntryAsync(id, t);
                 return Ok();
             } catch (EntityNotFoundException e)

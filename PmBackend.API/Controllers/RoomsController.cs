@@ -45,9 +45,9 @@ namespace PmBackend.API.Controllers
 
         // POST: api/Rooms
         [HttpPost]
-        public async Task<ActionResult<RoomDto>> CreateRoomAsync([FromBody] RoomDto newRoomDto)
+        public async Task<ActionResult<RoomDto>> CreateRoomAsync([FromBody] CreateRoomDto newRoomDto)
         {
-            var r = newRoomDto.ToRoom();
+            var r = newRoomDto.ToModel();
             var room = await _roomService.InsertRoomAsync(r);
             var roomDto = new RoomDto(room);
             return Ok(roomDto);
@@ -55,11 +55,11 @@ namespace PmBackend.API.Controllers
 
         // PUT: api/Rooms/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRoomAsync(int id, [FromBody] RoomDto updatedRoom)
+        public async Task<ActionResult> UpdateRoomAsync(int id, [FromBody] UpdateRoomDto updatedRoom)
         {
             try
             {
-                var r = updatedRoom.ToRoom();
+                var r = updatedRoom.ToModel(id);
                 await _roomService.UpdateRoomAsync(id, r);
                 return Ok();
             }

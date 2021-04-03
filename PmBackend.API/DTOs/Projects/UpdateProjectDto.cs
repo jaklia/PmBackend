@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace PmBackend.API.DTOs.Projects
 {
-    public class CreateProjectDto
+    public class UpdateProjectDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public CreateProjectModel ToModel()
+        public UpdateProjectModel ToModel(int projectId)
         {
-            return new CreateProjectModel
+            return new UpdateProjectModel
             {
+                Id = projectId,
                 Name = Name,
                 Description = Description
             };

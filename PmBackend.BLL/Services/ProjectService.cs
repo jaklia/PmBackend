@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PmBackend.BLL.Exceptions;
 using PmBackend.BLL.Interfaces;
+using PmBackend.BLL.Models.Projects;
 using PmBackend.DAL;
 using PmBackend.DAL.Entities;
 using System;
@@ -65,31 +66,33 @@ namespace PmBackend.BLL.Services
         //    throw new NotImplementedException();
         //}
 
-        public async Task<Project> InsertProjectAsync(Project newProject)
+        public async Task<Project> InsertProjectAsync(CreateProjectModel newProject)
         {
-            _ctx.Projects.Add(newProject);
+            var project = new Project
+            {
+                Name = newProject.Name,
+                Description = newProject.Description
+            };
+            _ctx.Projects.Add(project);
             await _ctx.SaveChangesAsync();
-            return newProject;
+            return project;
         }
 
-        public async Task UpdateProjectAsync(int projectId, Project updatedProject)
+        public async Task UpdateProjectAsync(int projectId, UpdateProjectModel updatedProject)
         {
-            updatedProject.Id = projectId;
-            var p = _ctx.Attach(updatedProject);
-            p.State = EntityState.Modified;
-            try
+            var project = await _ctx.Projects
+                .Include(p => p.Issues)
+                .SingleOrDefaultAsync(p => p.Id == projectId);
+            if (project == null)
             {
-                await _ctx.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (await _ctx.Projects.SingleOrDefaultAsync(p => p.Id == projectId) == null)
-                {
-                    throw new EntityNotFoundException("Project not found");
-                } else 
-                {
-                    throw;
-                }
+                throw new EntityNotFoundException("Project not found");
             }
+            project.Description = updatedProject.Description;
+            project.Name = updatedProject.Name;
+            await _ctx.SaveChangesAsync();
+
+            // TODO:  ?? update issues here ??? 
+
         }
     }
 }

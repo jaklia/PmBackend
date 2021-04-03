@@ -89,6 +89,11 @@ namespace PmBackend.BLL.Services
                 .Include(m => m.UserMeetings)
                 .Include(m => m.Room)
                 .FirstOrDefaultAsync(m => m.Id == meetingId);
+            if (meeting == null)
+            {
+                throw new EntityNotFoundException("Meeting not found");
+            }
+
             meeting.Title = updatedMeeting.Title;
             meeting.StartDate = updatedMeeting.StartDate;
             meeting.EndDate = updatedMeeting.EndDate;

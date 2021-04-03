@@ -64,11 +64,7 @@ namespace PmBackend.API.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectDto>> CreateProjectAsync([FromBody] CreateProjectDto newProject)
         {
-            var p = new Project
-            {
-                Name = newProject.Name,
-                Description = newProject.Description
-            };
+            var p = newProject.ToModel();
             var created =  await _projectService.InsertProjectAsync(p);
 
             var createdDto = new ProjectDto(created);
@@ -77,11 +73,12 @@ namespace PmBackend.API.Controllers
 
         // PUT: api/Projects/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProjectAsync(int id, [FromBody] ProjectDto projectDto)
+        public async Task<ActionResult> UpdateProjectAsync(int id, [FromBody] UpdateProjectDto value)
         {
             try
             {
-                await _projectService.UpdateProjectAsync(id, projectDto.ToProject());
+                var project = value.ToModel(id);
+                await _projectService.UpdateProjectAsync(id, project);
                 return Ok();
             } catch (EntityNotFoundException e)
             {

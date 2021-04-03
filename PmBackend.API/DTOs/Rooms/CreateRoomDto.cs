@@ -1,4 +1,4 @@
-﻿using PmBackend.DAL.Entities;
+﻿using PmBackend.BLL.Models.Rooms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace PmBackend.API.DTOs.Rooms
 {
-    public class RoomDto
+    public class CreateRoomDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Capacity { get; set; }
 
-        public RoomDto(Room room)
+        public CreateRoomModel ToModel()
         {
-            Id = room.Id;
-            Name = room.Name;
-            Capacity = room.Capacity;
+            return new CreateRoomModel
+            {
+                Name = Name,
+                Capacity = Capacity
+            };
         }
-
-
     }
 }

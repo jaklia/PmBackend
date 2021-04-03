@@ -1,9 +1,6 @@
-﻿using PmBackend.DAL.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using PmBackend.DAL.Entities;
 
 namespace PmBackend.API.DTOs.TimeEntries
 {
@@ -32,7 +29,7 @@ namespace PmBackend.API.DTOs.TimeEntries
         [Required(ErrorMessage = "UserName is required")]
         public string UserName { get; set; }
 
-        public TimeEntryDto(DAL.Entities.TimeEntry t)
+        public TimeEntryDto(TimeEntry t)
         {
             Id = t.Id;
             Date = t.Date;
@@ -44,17 +41,5 @@ namespace PmBackend.API.DTOs.TimeEntries
             UserName = t.User.UserName;
         }
 
-        public TimeEntry ToTimeEntry()
-        {
-            return new TimeEntry
-            {
-                Id = Id,
-                Date = Date,
-                Minutes = Minutes,
-                Description = Description,
-                IssueId = IssueId,
-                UserId = UserId
-            };
-        }
     }
 }
