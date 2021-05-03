@@ -32,6 +32,9 @@ namespace PmBackend.BLL.Services
             _config = config;
             _roleManager = roleManager;
         }
+
+       
+
         public async Task<LoginResponse> Login(LoginRequest loginRequest)
         {
             var user = await _ctx.Users.SingleOrDefaultAsync(u => u.UserName == loginRequest.UserName);
@@ -44,13 +47,41 @@ namespace PmBackend.BLL.Services
             if (result == PasswordVerificationResult.Failed)
             {
                 throw new AuthenticationException("Incorrect password");
-            } else
+            }
+            else
             {
                 var token = await GenerateJWT(user);
-                return new LoginResponse { User= user, AccessToken = token};
+                return new LoginResponse { User = user, AccessToken = token };
             }
-
         }
+
+        public async Task<LoginResponse> AdminLogin(LoginRequest loginRequest)
+        {
+            var user = await _ctx.Users.SingleOrDefaultAsync(u => u.UserName == loginRequest.UserName);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("No user found with given username");
+            }
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
+                if (result == PasswordVerificationResult.Failed)
+                {
+                    throw new AuthenticationException("Incorrect password");
+                }
+                else
+                {
+                    var token = await GenerateJWT(user);
+                    return new LoginResponse { User = user, AccessToken = token };
+                }
+            }
+            else
+            {
+                throw new AuthenticationException("Not admin");
+            }
+        }
+
 
         public async Task<bool> Register(User user)
         {

@@ -58,6 +58,29 @@ namespace PmBackend.API.Controllers
             }
             
         }
+
+        [AllowAnonymous]
+        [Route("adminlogin")]
+        [HttpPost]
+        public async Task<ActionResult<LoginResponse>> AdminLoginAsync([FromBody] LoginRequest loginRequest)
+        {
+            try
+            {
+                var res = await _authService.AdminLogin(loginRequest);
+                return Ok(res);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (AuthenticationException e)
+            {
+                return Unauthorized(e.Message);
+            }
+
+        }
+
+
         // POST: api/Auth
         [Route("register")]
         [HttpPost]
@@ -67,16 +90,6 @@ namespace PmBackend.API.Controllers
         }
 
 
-        //// PUT: api/Auth/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE: api/ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        
     }
 }

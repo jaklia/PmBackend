@@ -10,6 +10,8 @@ namespace PmBackend.BLL.Interfaces
     public interface IAuthService
     {
         public  Task<LoginResponse> Login(LoginRequest loginRequest);
+        public Task<LoginResponse> AdminLogin(LoginRequest loginRequest);
+        
         public Task<bool> Register(User user);
     }
 }
